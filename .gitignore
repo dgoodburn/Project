@@ -1,11 +1,10 @@
-<<<<<<< HEAD
 
 # Elastic Beanstalk Files
 .elasticbeanstalk/*
 !.elasticbeanstalk/*.cfg.yml
 !.elasticbeanstalk/*.global.yml
-=======
+
 *.egg-info/
 *.pyc
 /money.db
->>>>>>> 648e055e34e9a40094f1cef8b9dca1b90362ffd0
+
