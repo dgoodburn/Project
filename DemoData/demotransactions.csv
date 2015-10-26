@@ -6169,7 +6169,7 @@ id,transdate,description,amount,category,accountname
 6168,27-Feb-13,,-7,Bank Fee,US CHECKING
 6169,27-Feb-13,,-34.28,Restaurants,CAD CREDIT CARD
 6170,27-Feb-13,,3990,Transfer,CAD TFSA
-6171,27-Feb-13,,-3330,Transfer,CAD CHECKING
+6171,27-Feb-13,,-10,Transfer,CAD CHECKING
 6172,27-Feb-13,,-3.54,Fast Food,CAD CREDIT CARD
 6173,27-Feb-13,,-13.9,Alcohol & Bars,CAD CREDIT CARD
 6174,28-Feb-13,,-7.02,Fast Food,CAD CREDIT CARD
@@ -7284,7 +7284,7 @@ id,transdate,description,amount,category,accountname
 7283,28-Dec-13,,-5.65,Fast Food,CAD CREDIT CARD
 7284,28-Dec-13,,-17,Alcohol & Bars,CAD CREDIT CARD
 7285,28-Dec-13,,-34.05,Rental Car & Taxi,CAD CREDIT CARD
-7286,28-Dec-13,,-16920,Transfer,CAD CHECKING
+7286,28-Dec-13,,-10,Transfer,CAD CHECKING
 7287,28-Dec-13,,-18,Alcohol & Bars,CAD CREDIT CARD
 7288,29-Dec-13,,913.5,Gift Received,CAD CHECKING
 7289,29-Dec-13,,-7.94,Fast Food,CAD CREDIT CARD
