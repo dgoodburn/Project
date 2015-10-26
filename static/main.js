@@ -22,12 +22,6 @@ window.GLOBALS = {
         negativeColor: 'red',
         negativeParens: true
     }),
-    /*owner: google.visualization.arrayToDataTable([
-        ['Owner'],
-        ['Dan'],
-        ['Emma'],
-        ['Joint']
-    ]),*/
     owner: [],
     grid: $('.mdl-grid'),
     cache: {},
@@ -37,7 +31,6 @@ window.GLOBALS = {
 
 $(document).ready(function() {
 
-    //$.getJSON($SCRIPT_ROOT + '/owners', {}, function (data) { console.log(data); });
     $.getJSON($SCRIPT_ROOT + '/owners', {}, function (data) { initializeOwners(data.owners); });
     $('#JointButton').click(JointButtonClick);
     $('#CurrencyButton').click(CurrencyButtonClick);
@@ -71,9 +64,8 @@ function loadTransactionsPage() {
 
     clearPage();
 
-    $.getJSON($SCRIPT_ROOT + '/transactions', {limit:20}, function (data) {
+    $.getJSON($SCRIPT_ROOT + '/transactions', {limit:10}, function (data) {
 
-        GLOBALS.grid.append(data.transactionDiv);
         indtranstable(data.x , data.y);
 
         initiateButtons();
@@ -91,8 +83,6 @@ function loadStocksPage() {
     $.getJSON($SCRIPT_ROOT + '/stocks', {}, function (data) { initializeStockChart(data.sumStockTableData, data.sumstocksPricesData[0], data.sumstocksPricesData[1]); });
 
     $.getJSON($SCRIPT_ROOT + '/stocksChart', {}, function (data) { initializeStocksChart(data.stockData); });
-
-    $.getJSON($SCRIPT_ROOT + '/stockPrices', {}, function (data) { initializeStockPrices(data.stocksPricesData); });
 
     $.getJSON($SCRIPT_ROOT + '/stockTable', {}, function (data) { initializeStockTable(data.stockTableData); });
 
@@ -140,21 +130,6 @@ function loadSpendingPage() {
 
 }
 
-function loadAccrualPage() {
-
-    clearPage();
-
-    $.getJSON($SCRIPT_ROOT + '/accrual', {}, function (data) {
-
-        accrualsTable(data.accrualData);
-
-    });
-    return false;
-
-}
-
-
-
 
 function initiateButtons() {
 
@@ -194,7 +169,7 @@ function redraw() {
 
             a: $('#JointButton').html(),
             b: $('#PageUpButton').val(),
-            limit: 20
+            limit: 10
 
         }, function (x) {
             indtranstable(x.x, x.y);

@@ -8,18 +8,12 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="../static/material.min.css">
     <link rel="stylesheet" href="../static/styles.css">
-    <link href='http://fonts.googleapis.com/css?family=Roboto2:400,100,100italic,300,300ita‌​lic,400italic,500,500italic,700,700italic,900italic,900' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Roboto2:400,100,100italic,300,300ita‌​lic,400italic,500,500italic,700,700italic,900italic,900'
+          rel='stylesheet' type='text/css'>
     <!--<link rel="stylesheet" href="https://storage.googleapis.com/code.getmdl.io/1.0.4/material.indigo-pink.min.css">-->
     <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
     <script type=text/javascript>
         $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
-        //loadHomePage();
-    </script>
-    <script type="text/javascript" async>
-
-        //data = [];
-        //$.getJSON($SCRIPT_ROOT + '/front', {}, function (data) { loadHomePage(data); });
-
     </script>
 
 </head>
@@ -28,27 +22,9 @@
     <header class="demo-header mdl-layout__header mdl-color--white mdl-color--grey-100 mdl-color-text--grey-600">
 
         <div class="mdl-layout__header-row">
-            <span class="mdl-layout-title" style="padding-left: 16px">Home</span>
+            <span class="mdl-layout-title" style="padding-left: 16px; cursor: pointer" href="#/home/"
+                  onclick="loadHomePage()">Home</span>
 
-            <div class="mdl-layout-spacer"></div>
-            <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable">
-                <label class="mdl-button mdl-js-button mdl-button--icon" for="search">
-                    <i class="material-icons">search</i>
-                </label>
-
-                <div class="mdl-textfield__expandable-holder">
-                    <input class="mdl-textfield__input" type="text" id="search"/>
-                    <label class="mdl-textfield__label" for="search">Enter your query...</label>
-                </div>
-            </div>
-            <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon" id="hdrbtn">
-                <i class="material-icons">more_vert</i>
-            </button>
-            <ul class="mdl-menu mdl-js-menu mdl-js-ripple-effect mdl-menu--bottom-right" for="hdrbtn">
-                <li class="mdl-menu__item">About</li>
-                <li class="mdl-menu__item">Contact</li>
-                <li class="mdl-menu__item">Legal information</li>
-            </ul>
         </div>
     </header>
     <div class="demo-drawer mdl-layout__drawer mdl-color--blue-grey-400 mdl-color-text--white">
@@ -60,8 +36,8 @@
 
                 <div class="mdl-layout-spacer"></div>
                 <button id="accbtn" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
-                    <i class="material-icons" role="presentation">arrow_drop_down</i>
-                    <span class="visuallyhidden">Accounts</span>
+                    <i class="material-icons" role="presentation"></i>
+                    <span class="visuallyhidden"></span>
                 </button>
             </div>
         </header>
@@ -84,15 +60,10 @@
             <a class="mdl-navigation__link" href="#/transactions/" onclick="loadTransactionsPage()"><i
                     class="mdl-color-text--blue-grey-400 material-icons"
                     role="presentation">local_atm</i>Transactions</a>
-            <a class="mdl-navigation__link" href="#/accrual/" onclick="loadAccrualPage()"><i
-                    class="mdl-color-text--blue-grey-400 material-icons"
-                    role="presentation">extension</i>Accrual</a>
         </nav>
     </div>
     <main class="mdl-layout__content"
           style="background-image: url(../static/images/backgroundbanner.jpg)">
-        <!--mdl-color--grey-100"-->
-
 
         <div class="mdl-grid demo-content">
 
@@ -111,9 +82,12 @@
 <div>
     <button class="myButton" id="CurrencyButton">USD</button>
     <div class="mdl-tooltip" for="CurrencyButton" style="background-color: #77b55a">
-                        Currency
-                    </div>
+        Currency
+    </div>
     <button class="myButton" id="JointButton">Combined</button>
+    <div class="mdl-tooltip" for="JointButton" style="background-color: #77b55a">
+        User
+    </div>
 </div>
 
 
@@ -122,12 +96,6 @@
                                               "version":"1","packages":["controls"]}]}'>
 </script>
 
-<!--
-<script type="text/javascript"
-        src='https://www.google.com/jsapi?autoload={"modules":[{"name":"visualization",
-                                              "version":"1.1"}]}'>
-</script>
--->
 <script src="https://storage.googleapis.com/code.getmdl.io/1.0.4/material.min.js" async></script>
 
 <script src="../static/charts.js"></script>

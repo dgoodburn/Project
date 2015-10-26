@@ -92,10 +92,12 @@ def stockspricespage():
 
     return jsonify(stocksPricesData=charts.stockPricesData())
 
+
 @application.route('/stocksChart/')
 def stockschartpage():
 
     return jsonify(stockData=charts.stockData())
+
 
 @application.route('/sumstockPrices/')
 def sumstockspricespage():
@@ -119,9 +121,9 @@ def sumstocktablepage():
 def transactionspage():
 
     limit = request.args.get('limit', 0, type=int)
-    x, y = charts.indtransactions("Joint", 1, limit)
+    x, y = charts.indtransactions("Combined", 1, limit)
 
-    return jsonify(transactionDiv=render_template("transactions.html"), x=x, y=y)
+    return jsonify(x=x, y=y)
 
 
 @application.route('/transactionsajax/')

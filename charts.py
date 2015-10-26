@@ -8,7 +8,7 @@ from helperfunctions import returnTable, droplevel
 import sqlqueries
 
 engine = create_engine('sqlite:///money.db')
-owners = ['Emma','Dan','Joint']
+#owners = ['Emma','Dan','Joint']
 
 def spendingdata():
 
@@ -62,8 +62,10 @@ def stockData():
     df['Gain/Loss'] = np.cumsum(df.groupby(['owner', 'description'])['Gain/Loss'])
     df = pd.pivot_table(df, index=['transdate','owner', 'FXRate'],values=["Gain/Loss"],columns=['description']).reset_index()
 
+    owners = getowners().values.tolist()
+
     for owner in owners:
-        df[df.owner==owner] = df[df.owner==owner].sort(['transdate']).fillna(method='pad')
+        df[df.owner==owner[0]] = df[df.owner==owner[0]].sort(['transdate']).fillna(method='pad')
 
     df = df.fillna(0)
 
@@ -79,8 +81,10 @@ def stockPricesData():
 
     df = pd.pivot_table(df, index=['transdate','owner', 'FXRate'],values=["Price"],columns=['symbol']).reset_index()
 
+    owners = getowners().values.tolist()
+
     for owner in owners:
-        df[df.owner==owner] = df[df.owner==owner].sort(['transdate']).fillna(method='pad')
+        df[df.owner==owner[0]] = df[df.owner==owner[0]].sort(['transdate']).fillna(method='pad')
 
     df = df.fillna(0)
 
@@ -119,12 +123,7 @@ def indtransactions(a, page, limit):
 
     if a == "Combined":
         b = ""
-    elif a == "Emma":
-        b = 'and bankaccounts.owner = "%s"' %'Emma'
-    elif a == "Dan":
-        b = 'and bankaccounts.owner = "%s"' %'Dan'
-    else:
-        b = 'and bankaccounts.owner = "%s"' %'Joint'
+    else: b = 'and bankaccounts.owner = "%s"' %a
 
     a = sqlqueries.sqlindtransactions()
     df = pd.read_sql(a %(b, limit, (page-1)*limit), engine, parse_dates='transdate')
@@ -205,13 +204,17 @@ def sumspendingdata():
     return returnTable(df)
 
 
-def owners(): ### return list of owners
+def getowners(): ### return list of owners
 
     a = sqlqueries.sqlowners()
 
     df = pd.read_sql(a, engine)
 
-    return returnTable(df)
+    return df
+
+
+def owners():
+    return returnTable(getowners())
 
 def owners2(): ### return list of owners
 

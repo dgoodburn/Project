@@ -34,6 +34,10 @@ table.MyTable.prototype.draw = function (data, options) {
         html.push('</tr>');
     }
     html.push('</table>');
+    for (var i = 0; i <= 4; i++) {
+        html.push('</br>');
+    }
+
 
     this.containerElement.innerHTML = html.join('');
 };

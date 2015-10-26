@@ -258,7 +258,6 @@ function initializeSpendingChart(spendingdata) {
     spendingChart.redraw = function () {
 
         this.dataOwnerJoin = this.dataJoin(this.dataTable, "Combined");
-        //this.dataOwnerJoin = this.dataJoin(this.dataTable);
         this.dataView = this.dataOwnerGroup(this.dataOwnerJoin);
         this.dataView = this.currencyChange(this.dataView);
         this.chartWrapper.setDataTable(this.dataView);
@@ -293,7 +292,6 @@ function initializeSpendingChart(spendingdata) {
 
     function changeNumbers2(e) {
 
-        console.log(spendingChart.dataView);
         try {
             var spend = spendingChart.dataView.getValue(e, 1);
             var goal = spendingChart.dataView.getValue(e, 2);
@@ -421,6 +419,9 @@ function initializeStockChart(stockSumData, stockPriceData, originalStockPrice) 
         this.dataView = this.dataOwnerGroup(this.dataOwnerJoin);
         this.dataView = this.currencyChange(this.dataView);
         this.chartWrapper.setDataTable(this.dataView);
+        for (var i = 1; i < this.dataView.getNumberOfColumns(); i++) {
+            this.removeZeroColumn(this.dataView, i);
+        }
         GLOBALS.formatinddate.format(this.dataView, 0);
         this.setMinMaxValues(this.getViewRange(this.dataView));
 
@@ -500,7 +501,7 @@ function initializeStockTable(stockTableData) {
 
         stockTable.dataOwnerJoin = stockTable.dataJoin(stockTable.dataTable);
         stockTable.dataView = stockTable.dataOwnerGroup(stockTable.dataOwnerJoin);
-        stockTable.dataView.removeColumns(0, 1);
+        stockTable.dataView.removeColumns(0, 2);
         GLOBALS.format4decimals.format(stockTable.dataView, 1);
         GLOBALS.formatdecimals.format(stockTable.dataView, 2);
         GLOBALS.formatdecimals.format(stockTable.dataView, 3);
@@ -513,31 +514,6 @@ function initializeStockTable(stockTableData) {
     stockTable.redraw()
 
 }
-
-
-function initializeStockPrices(stockPriceData) {
-
-    stockPrices = new chart(
-        div = 'stockPricesDiv',
-        data = stockPriceData,
-        divcol = 6,
-        firstTitle = 'Stock Prices',
-        secondTitle = 'Over Time',
-        sumcol = false
-    );
-
-    stockPrices.chartWrapper.setChartType('LineChart');
-    stockPrices.chartWrapper.setOption('interpolateNulls', false);
-    stockPrices.controlWrapper.setState({range: {start: new Date(2015, 5, 1)}});
-    stockPrices.controlWrapper.setOption('ui.chartOptions.seriesType', 'line');
-    stockPrices.controlWrapper.setOption('ui.chartOptions.lineWidth', 1);
-
-    GLOBALS.grid.append(stockPrices.htmldiv);
-    stockPrices.dataTable = stockPrices.initialDraw(stockPrices.data);
-    stockPrices.redraw();
-
-}
-
 
 
 function initializeIndBudgetChart(budgetData) {
@@ -751,6 +727,53 @@ function initializeNetIncomeChart(netincomedata) {
 
 
 function indtranstable(x, y) {
+
+    var buttonDiv = '\
+        <div class="demo-graphs mdl-cell mdl-cell--4-col" id="buttons"\
+             style="margin-bottom: 0; margin-top: 0; padding-top: 16px; padding-bottom:0; padding-left:16px">\
+            <div id="alignbuttons" style="display: table-row;">\
+                <button id="FirstPageButton"\
+                        class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored"\
+                        style="display: inline-block; background-color: #546E7A; color: rgba(255, 255, 255, 0.56)">\
+                    <i class="material-icons" style="display: table-cell;">arrow_back</i>\
+                </button>\
+                <div class="mdl-tooltip" for="FirstPageButton" style="background-color: #77b55a">\
+                    First Page\
+                </div>\
+                <button id="PageDownButton"\
+                        class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored"\
+                        style="display: inline-block; background-color: #546E7A; color: rgba(255, 255, 255, 0.56)">\
+                    <i class="material-icons" style="display: table-cell;">remove</i>\
+                </button>\
+                <div class="mdl-tooltip" for="PageDownButton" style="background-color: #77b55a">\
+                    Previous Page\
+                </div>\
+                <button id="PageUpButton"\
+                        class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored"\
+                        value=1\
+                        style="display: inline-block; background-color: #546E7A; color: rgba(255, 255, 255, 0.56)">\
+                    <i class="material-icons" style="display: table-cell;">add</i>\
+                </button>\
+                <div class="mdl-tooltip" for="PageUpButton"\
+                     style="z-index: 1000; left: 260px; margin-left: -50px; top: 114px; background-color: rgb(119, 181, 90);"\
+                     data-upgraded=",MaterialTooltip">\
+                    Next Page\
+                </div>\
+                </div>\
+        </div>\
+        <div class="demo-graphs mdl-cell mdl-cell--12-col" style="padding:0px 0px; margin-top: 16px" id="table_div">\
+        </div>';
+
+    var transactionDiv = '\
+        <div id="transactions_table_div" style="width:100%; height:100%;"></div>';
+
+    $('#buttons').length > 0 ? void(0) : GLOBALS.grid.append(buttonDiv);
+    if ($('#table_div').length > 0) {
+        $('#table_div').empty();
+        $('#table_div').append(transactionDiv);
+    } else {
+        $('#table_div').append(transactionDiv);
+    }
 
     var transdata = new google.visualization.DataTable();
 
