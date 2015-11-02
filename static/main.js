@@ -50,15 +50,27 @@ function loadHomePage() {
 
     return $.when(
 
-        $.getJSON($SCRIPT_ROOT + '/stocks', {}, function (data) { var d = $.Deferred(); initializeStockChart(data.sumStockTableData, data.sumstocksPricesData[0], data.sumstocksPricesData[1], 0); return d.promise();}),
+        $.getJSON($SCRIPT_ROOT + '/stocks', {}, function (data) {
+            var d = $.Deferred();
+            initializeStockChart(data.sumStockTableData, data.sumstocksPricesData[0], data.sumstocksPricesData[1], 0);
+            return d.promise();}),
 
-        $.getJSON($SCRIPT_ROOT + '/balances', {}, function (data) { var d = $.Deferred(); initializeBalanceChart(data.balanceData, data.currentBalanceData, 0); return d.promise();}),
+        $.getJSON($SCRIPT_ROOT + '/balances', {}, function (data) {
+            var d = $.Deferred();
+            initializeBalanceChart(data.balanceData, data.currentBalanceData, 0);
+            return d.promise();}),
 
-        $.getJSON($SCRIPT_ROOT + '/overallbudget', {}, function (data) { var d = $.Deferred(); initializeBudgetChart(data.overallbudgetData, 1); return d.promise();}),
+        $.getJSON($SCRIPT_ROOT + '/overallbudget', {}, function (data) {
+            var d = $.Deferred();
+            initializeBudgetChart(data.overallbudgetData, 1);
+            return d.promise();}),
 
-        $.getJSON($SCRIPT_ROOT + '/currentspending', {}, function (data) { var d = $.Deferred(); initializeSpendingChart(data.spendingdata, 2); return d.promise();})
+        $.getJSON($SCRIPT_ROOT + '/currentspending', {}, function (data) {
+            var d = $.Deferred();
+            initializeSpendingChart(data.spendingdata, 2);
+            return d.promise();})
 
-    ).done(function() { $('.demo-graphs').css("opacity", 1); });
+    ).done(function() { console.log(1); $('.demo-graphs').css("opacity", 1); });
 
 }
 
