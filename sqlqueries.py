@@ -234,10 +234,10 @@ def sqloverallbudget():
                      FROM
                        transactions
                        INNER JOIN bankaccounts ON bankaccounts.MintAccountName = transactions.accountname
-                     WHERE Date2 = date('2015-11-31')
+                     WHERE Date2 = date('2015-11-30')
                      GROUP BY transactions.category, bankaccounts.Owner, Date2) AS T1
            ON T1.Date2 = Date1 AND Owner1 = T1.Owner2 AND Category1 = T1.Category2
-       WHERE Date1 = date('2015-11-31')) AS T2
+       WHERE Date1 = date('2015-11-30')) AS T2
       INNER JOIN fxrates ON date(fxrates.FXDate) = T2.Date1
     GROUP BY T2.Date1, T2.Owner1, fxrates.Rate
     '''

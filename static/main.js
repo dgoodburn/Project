@@ -52,7 +52,7 @@ function loadHomePage() {
 
         $.getJSON($SCRIPT_ROOT + '/stocks', {}, function (data) {
             var d = $.Deferred();
-            initializeStockChart(data.sumStockTableData, data.sumstocksPricesData[0], data.sumstocksPricesData[1], 0);
+            initializeStockChart(data.sumStockTableData, data.sumstocksPricesData[0], data.sumstocksPricesData[1], 3);
             return d.promise();}),
 
         $.getJSON($SCRIPT_ROOT + '/balances', {}, function (data) {
