@@ -62,7 +62,6 @@ function loadHomePage() {
 
         $.getJSON($SCRIPT_ROOT + '/overallbudget', {}, function (data) {
             var d = $.Deferred();
-            console.log(data);
             initializeBudgetChart(data.overallbudgetData, 1);
             return d.promise();}),
 
