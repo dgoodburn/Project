@@ -70,7 +70,7 @@ function loadHomePage() {
             initializeSpendingChart(data.spendingdata, 2);
             return d.promise();})
 
-    ).done(function() { console.log(1); $('.demo-graphs').css("opacity", 1); });
+    ).done(function() { $('.demo-graphs').css("opacity", 1); });
 
 }
 
@@ -94,13 +94,6 @@ function loadTransactionsPage() {
 
 function loadStocksPage() {
 
-    StocksPage().done(function() {
-        $('.demo-graphs').css("opacity", 1);
-    });
-}
-
-function StocksPage() {
-
     clearPage();
 
     return $.when(
@@ -111,19 +104,11 @@ function StocksPage() {
 
         $.getJSON($SCRIPT_ROOT + '/stockTable', {}, function (data) { var d = $.Deferred(); initializeStockTable(data.stockTableData, 2); return d.promise(); })
 
-    ).done(function() { return true });
+    ).done(function() { $('.demo-graphs').css("opacity", 1); });
 
 }
-
 
 function loadBudgetPage() {
-
-    BudgetPage().done(function() {
-        $('.demo-graphs').css("opacity", 1);
-    });
-}
-
-function BudgetPage() {
 
     clearPage();
 
@@ -133,18 +118,12 @@ function BudgetPage() {
 
         $.getJSON($SCRIPT_ROOT + '/budget', {}, function (data) { var d = $.Deferred(); initializeIndBudgetChart(data.budgetData, 1); return d.promise(); })
 
-    ).done(function() { return true });
+    ).done(function() { $('.demo-graphs').css("opacity", 1); });
 
 }
+
 
 function loadBalancesPage() {
-
-    BalancesPage().done(function() {
-        $('.demo-graphs').css("opacity", 1);
-    });
-}
-
-function BalancesPage() {
 
     clearPage();
 
@@ -154,18 +133,11 @@ function BalancesPage() {
 
         $.getJSON($SCRIPT_ROOT + '/NIFX', {}, function (data) { var d = $.Deferred(); initializeNIFXChart(data.NIFXdata, 1);  return d.promise();})
 
-    ).done(function() { return true });
+    ).done(function() { $('.demo-graphs').css("opacity", 1); });
 
 }
 
 function loadSpendingPage() {
-
-    SpendingPage().done(function() {
-        $('.demo-graphs').css("opacity", 1);
-    });
-}
-
-function SpendingPage() {
 
     clearPage();
 
@@ -175,7 +147,7 @@ function SpendingPage() {
 
         $.getJSON($SCRIPT_ROOT + '/netincome', {}, function (data) { var d = $.Deferred(); initializeNetIncomeChart(data.netincomedata, 1);  return d.promise();})
 
-    ).done(function() { return true });
+    ).done(function() { $('.demo-graphs').css("opacity", 1); });
 
 }
 
