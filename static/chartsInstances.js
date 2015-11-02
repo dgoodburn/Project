@@ -454,7 +454,7 @@ function initializeStockChart(stockSumData, stockPriceData, originalStockPrice, 
 //////////////////////////////////////////////////////////////////
 
 
-function initializeStocksChart(stocksData) {
+function initializeStocksChart(stocksData, chartOrder) {
 
     var stocks = new chart(
         div = 'stocksDiv',
@@ -474,14 +474,14 @@ function initializeStocksChart(stocksData) {
     stocks.controlWrapper.setOption('ui.chartOptions.series.5.type', 'line');
     stocks.controlWrapper.setState({range: {start: new Date(2015, 5, 1)}});
 
-    GLOBALS.grid.append(stocks.htmldiv);
+    stocks.appendHTMLDiv(chartOrder);
     stocks.dataTable = stocks.initialDraw(stocks.data);
     stocks.redraw();
 
 }
 
 
-function initializeStockTable(stockTableData) {
+function initializeStockTable(stockTableData, chartOrder) {
 
     stockTable = new chart(
         div = 'stockTableDiv',
@@ -516,7 +516,7 @@ function initializeStockTable(stockTableData) {
 }
 
 
-function initializeIndBudgetChart(budgetData) {
+function initializeIndBudgetChart(budgetData, chartOrder) {
 
     indBudgetChart = new chart(
         div = 'indBudgetChartDiv',
@@ -557,7 +557,7 @@ function initializeIndBudgetChart(budgetData) {
 
 
 
-function initializeNIFXChart(NIFXdata) {
+function initializeNIFXChart(NIFXdata, chartOrder) {
 
     NIFX = new chart(
         div = 'NIFXDiv',
@@ -682,7 +682,7 @@ function manipulateNIFXData(dataView) {
 
 
 
-function initializeMonthlySpend(spendingdata) {
+function initializeMonthlySpend(spendingdata, chartOrder) {
 
     monthlySpend = new chart(
         div = 'monthlySpendDiv',
@@ -705,7 +705,7 @@ function initializeMonthlySpend(spendingdata) {
 }
 
 
-function initializeNetIncomeChart(netincomedata) {
+function initializeNetIncomeChart(netincomedata, chartOrder) {
 
     NI = new chart(
         div = 'netIncomeDiv',

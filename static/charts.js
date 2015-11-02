@@ -450,6 +450,19 @@ var chart = function (div, data, divcol, firstTitle, secondTitle, sumcol, valSta
 
     };
 
+    this.appendHTMLDiv = function(chartOrder) {
+
+        var elements = GLOBALS.chartsOrder.slice(0,chartOrder); // return elements in array before position of current chart
+        var numberOfElements = elements.filter(function(x){return x}).length; // return count of True elements in slice
+        if (numberOfElements === 0) {
+            GLOBALS.grid.prepend(this.htmldiv); // if no others, set as first chart
+        } else {
+            $(GLOBALS.grid.children()[numberOfElements - 1]).after(this.htmldiv);
+        }
+        GLOBALS.chartsOrder[chartOrder] = true;
+
+    };
+
 
     GLOBALS.charts.push([this]);
 
