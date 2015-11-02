@@ -35,20 +35,13 @@ $(document).ready(function() {
     $.getJSON($SCRIPT_ROOT + '/owners', {}, function (data) { initializeOwners(data.owners); });
     $('#JointButton').click(JointButtonClick);
     $('#CurrencyButton').click(CurrencyButtonClick);
-    loadStartingPage();
+    loadHomePage();
 
 });
 
 
 function initializeOwners(data) {
     GLOBALS.owner = new google.visualization.DataTable(data);
-}
-
-function loadStartingPage() {
-
-    loadHomePage().done(function() {
-        $('.demo-graphs').css("opacity", 1);
-    });
 }
 
 function loadHomePage() {
@@ -65,7 +58,7 @@ function loadHomePage() {
 
         $.getJSON($SCRIPT_ROOT + '/currentspending', {}, function (data) { var d = $.Deferred(); initializeSpendingChart(data.spendingdata, 2); return d.promise();})
 
-    ).done(function() { return true });
+    ).done(function() { $('.demo-graphs').css("opacity", 1); });
 
 }
 
