@@ -170,9 +170,11 @@ function initializeBudgetChart(overallbudgetData, chartOrder) {
 
     budgetChart.redraw = function () {
 
+        console.log(this.dataTable);
         this.dataOwnerJoin = this.dataJoin(this.dataTable);
         this.dataOwnerJoin = this.dataOwnerGroup(this.dataOwnerJoin);
         this.dataOwnerJoin = this.currencyChange(this.dataOwnerJoin);
+        console.log(this.dataOwnerJoin);
         this.dataView = this.drawBudget(this.dataOwnerJoin);
         this.dataView = this.formatDateAndAmount(this.dataView);
         this.chartWrapper.setDataTable(this.dataView);
