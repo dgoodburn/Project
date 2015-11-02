@@ -25,7 +25,8 @@ window.GLOBALS = {
     owner: [],
     grid: $('.mdl-grid'),
     cache: {},
-    charts: []
+    charts: [],
+    chartsOrder: [false, false, false, false, false, false, false, false]
 
 };
 
@@ -34,11 +35,14 @@ $(document).ready(function() {
     $.getJSON($SCRIPT_ROOT + '/owners', {}, function (data) { initializeOwners(data.owners); });
     $('#JointButton').click(JointButtonClick);
     $('#CurrencyButton').click(CurrencyButtonClick);
-    loadHomePage();
+    loadHomePage().done(function() {
+        $('.demo-graphs').css("opacity", 1);
+    });
 
 });
 
-function initializeOwners(data){
+
+function initializeOwners(data) {
     GLOBALS.owner = new google.visualization.DataTable(data);
 }
 
@@ -47,15 +51,18 @@ function loadHomePage() {
 
     clearPage();
 
-    $.getJSON($SCRIPT_ROOT + '/balances', {}, function (data) { initializeBalanceChart(data.balanceData, data.currentBalanceData); });
+    return $.when(
 
-    $.getJSON($SCRIPT_ROOT + '/overallbudget', {}, function (data) { initializeBudgetChart(data.overallbudgetData); });
+        $.getJSON($SCRIPT_ROOT + '/stocks', {}, function (data) { var d1 = $.Deferred(); initializeStockChart(data.sumStockTableData, data.sumstocksPricesData[0], data.sumstocksPricesData[1], 0); return d1.promise();}),
 
-    $.getJSON($SCRIPT_ROOT + '/currentspending', {}, function (data) { initializeSpendingChart(data.spendingdata); });
+        $.getJSON($SCRIPT_ROOT + '/balances', {}, function (data) { var d2 = $.Deferred(); initializeBalanceChart(data.balanceData, data.currentBalanceData, 0); return d2.promise();}),
 
-    $.getJSON($SCRIPT_ROOT + '/stocks', {}, function (data) { initializeStockChart(data.sumStockTableData, data.sumstocksPricesData[0], data.sumstocksPricesData[1]); });
+        $.getJSON($SCRIPT_ROOT + '/overallbudget', {}, function (data) { var d3 = $.Deferred(); initializeBudgetChart(data.overallbudgetData, 1); return d3.promise();}),
 
-    return false;
+        $.getJSON($SCRIPT_ROOT + '/currentspending', {}, function (data) { var d4 = $.Deferred(); initializeSpendingChart(data.spendingdata, 2); return d4.promise();})
+
+    ).done(function() { return true });
+
 }
 
 

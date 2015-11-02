@@ -8,7 +8,7 @@ from sqlalchemy import create_engine
 
 engine = create_engine('sqlite:///money.db')
 
-start_date = "2015-10-06"  # False or Format "YYYY-MM-DD"
+start_date = False  # False or Format "YYYY-MM-DD"
 end_date = False  # False or Format "YYYY-MM-DD"
 
 
@@ -68,7 +68,7 @@ def uploadFX(rates):
 
     df = df.iloc[:, 1:]
 
-    df.to_csv('CSVs/FX rates.csv', index=False)
+    df.to_csv('Common/FX rates.csv', index=False)
 
 
 def fximport():

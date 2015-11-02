@@ -7,7 +7,7 @@
 //////////////////////////////////////////////////////////////////
 
 
-function initializeBalanceChart(balanceData, currentBalanceData) {
+function initializeBalanceChart(balanceData, currentBalanceData, chartOrder) {
 
     var balances = new chart(
         div = 'balancesDiv',
@@ -18,7 +18,7 @@ function initializeBalanceChart(balanceData, currentBalanceData) {
         sumcol = false,
         valStartCol = 3,
         categoryEndCol = 2,
-        chartHeight = '200px',
+        chartHeight = '100%',
         tooltip = true
     );
 
@@ -64,7 +64,7 @@ function initializeBalanceChart(balanceData, currentBalanceData) {
         </div>\
         ';
 
-    GLOBALS.grid.append(balances.createCardDivHTML());
+    balances.appendChartDiv(chartOrder);
 
     balances.redraw = function () {
 
@@ -116,7 +116,7 @@ function initializeBalanceChart(balanceData, currentBalanceData) {
 ////////////////       BUDGET CHART       ////////////////////////
 //////////////////////////////////////////////////////////////////
 
-function initializeBudgetChart(overallbudgetData) {
+function initializeBudgetChart(overallbudgetData, chartOrder) {
 
     var budgetChart = new chart(
         div = 'budgetChartDiv',
@@ -127,7 +127,7 @@ function initializeBudgetChart(overallbudgetData) {
         sumcol = false,
         valStartCol = 3,
         categoryEndCol = 2,
-        chartHeight = '200px',
+        chartHeight = 100,
         tooltip = false
     );
 
@@ -163,7 +163,7 @@ function initializeBudgetChart(overallbudgetData) {
             <h2 id="title"></h2>\
             <div class="mdl-card__supporting-text mdl-card--expand" id=titletext></div>';
 
-    GLOBALS.grid.append(budgetChart.createCardDivHTML());
+    budgetChart.appendChartDiv(chartOrder);
 
     budgetChart.dataTable = budgetChart.initialDraw(budgetChart.data);
     $('#title').html(budgetChart.title);
@@ -202,7 +202,7 @@ function initializeBudgetChart(overallbudgetData) {
 
 
 
-function initializeSpendingChart(spendingdata) {
+function initializeSpendingChart(spendingdata, chartOrder) {
 
     var spendingChart = new chart(
         div = 'monthlySpendDiv',
@@ -213,7 +213,7 @@ function initializeSpendingChart(spendingdata) {
         sumcol = false,
         valStartCol = 3,
         categoryEndCol = 2,
-        chartHeight = '200px',
+        chartHeight = 100,
         tooltip = false
     );
 
@@ -253,7 +253,7 @@ function initializeSpendingChart(spendingdata) {
             <span id=remaining></span>\
         </div>';
 
-    GLOBALS.grid.append(spendingChart.createCardDivHTML());
+    spendingChart.appendChartDiv(chartOrder);
 
     spendingChart.redraw = function () {
 
@@ -321,7 +321,7 @@ function initializeSpendingChart(spendingdata) {
 
 
 
-function initializeStockChart(stockSumData, stockPriceData, originalStockPrice) {
+function initializeStockChart(stockSumData, stockPriceData, originalStockPrice, chartOrder) {
 
     var summaryStockChart = new chart(
         div = 'sumStockTableDiv',
@@ -342,7 +342,7 @@ function initializeStockChart(stockSumData, stockPriceData, originalStockPrice) 
         sumcol = false,
         valStartCol = 3,
         categoryEndCol = 2,
-        chartHeight = '200px',
+        chartHeight = 100,
         tooltip = true
     );
 
@@ -390,7 +390,7 @@ function initializeStockChart(stockSumData, stockPriceData, originalStockPrice) 
             <h2 class="mdl-card__title-text" id=totalStocks></h2>\
           </div>';
 
-    GLOBALS.grid.append(stockChart.createCardDivHTML());
+    stockChart.appendChartDiv(chartOrder);
 
     summaryStockChart.redraw = function () {
 

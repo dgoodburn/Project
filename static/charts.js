@@ -304,7 +304,7 @@ var chart = function (div, data, divcol, firstTitle, secondTitle, sumcol, valSta
     this.createCardDivHTML = function () {
         return '\
             <div class="demo-graphs mdl-cell mdl-cell--' + this.divcol + '-col mdl-color--white mdl-shadow--2dp" style="padding:0px; border-radius: 2px;" id=' + this.cardDiv + '>\
-            <div class="demo-graphs" id=test style="padding:0px">\
+            <div class="demo-graphs" id=test style="padding:0px; opacity:0;">\
                 <div class="firstTitle" style="padding:16px 0 0 16px">' + this.firstTitle + '</div>\
                 <div class="secondTitle" style="padding:0 0 0 16px">' + this.secondTitle + '</div>\
                 ' + this.info + '\
@@ -437,8 +437,23 @@ var chart = function (div, data, divcol, firstTitle, secondTitle, sumcol, valSta
         ]);
     };
 
+    this.appendChartDiv = function(chartOrder) {
+
+        var elements = GLOBALS.chartsOrder.slice(0,chartOrder); // return elements in array before position of current chart
+        var numberOfElements = elements.filter(function(x){return x}).length; // return count of True elements in slice
+        if (numberOfElements === 0) {
+            GLOBALS.grid.prepend(this.createCardDivHTML()); // if no others, set as first chart
+        } else {
+            $(GLOBALS.grid.children()[numberOfElements - 1]).after(this.createCardDivHTML());
+        }
+        GLOBALS.chartsOrder[chartOrder] = true;
+
+    };
+
 
     GLOBALS.charts.push([this]);
+
+
 
 };
 
