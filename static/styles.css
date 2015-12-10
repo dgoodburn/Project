@@ -207,12 +207,15 @@ _:-ms-input-placeholder, :root .demo-graph {
   font-size: 1em;
 }
 
-#cardbalancesDiv, #cardstockPricesDiv2, #cardbudgetChartDiv, #cardmonthlySpendDiv {
+
+#wrapper{width: 83.3333333333% }
+
+#cardbalancesDiv, #cardstockPricesDiv2, #cardbudgetChartDiv, #cardmonthlySpendDiv, #cardgoalDiv {
     position: relative;
     border-radius: 2px;
     height: 300px;
 }
-#chartbalancesDiv, #chartstockPricesDiv2, #chartbudgetChartDiv, #chartmonthlySpendDiv {
+#chartbalancesDiv, #chartstockPricesDiv2, #chartbudgetChartDiv, #chartmonthlySpendDiv, #chartgoalDiv {
     position: relative;
     height: 248px;
     width: 100%;
@@ -220,6 +223,90 @@ _:-ms-input-placeholder, :root .demo-graph {
     z-index: 800;
     background: transparent;
     cursor: default;
+}
+
+.textInput {
+    height: 300px;
+}
+
+.cardgoalDiv {
+    height: 300px;
+    padding: 0 16px 0 16px;
+}
+
+.textInput {
+    height: 558px;
+    display: flex;
+    flex-direction: column;
+    padding: 16px 8px 16px 8px;
+}
+
+.mdl-textfield__input.goalinput {
+    height: 17px;
+    padding: 0;
+    border: 0;
+    width: 30px;
+    font-family: Roboto2, Helvetica, sans-serif;
+    color: rgba(0,0,0,.26);
+}
+
+.goalinput2 {
+
+    padding: 10px 0 10px 0;
+    width: 40px;
+    padding: 0;
+}
+
+.goallabel {
+    height: 15px;
+    /*color: #027fb7;*/
+}
+
+.button {
+    width:72px;
+    display: inline-block;
+    height:64px;
+    margin:0;
+    padding:0
+}
+
+.mdl-button.mdl-js-button.mdl-button--raised.mdl-js-ripple-effect.mdl-button--accent {
+    width:72px;
+    font-size: 9px;
+}
+
+
+
+form {
+    flex: 1;
+}
+
+.inputHeader {
+    color: #757575;
+    font-size: 11px;
+    flex: 1;
+    /*white-space: nowrap;*/
+
+}
+
+#allInputs {
+
+    line-height: 16px;
+}
+
+#goalDiv {
+    height: 100%;
+}
+
+#controlgoalDiv {
+    height: 36px;
+    display: inline-block;
+    width: 100%;
+}
+
+.controlgoalDiv {
+    height: 64px;
+    display: flex;
 }
 
 .mdl-card__actions {
@@ -238,6 +325,22 @@ _:-ms-input-placeholder, :root .demo-graph {
     cursor: default;
     -webkit-user-select: none;
 
+}
+
+#savings{
+    width: 100%;
+}
+
+#savings td, #savings th {
+    font-size: 11px;
+    padding: 4px 8px 0 8px;
+    width:calc(100% / 13);
+    height: 32px;
+}
+
+.mdl-textfield__input {
+    color: rgb(117, 117, 117);
+    font-size: 12px;
 }
 
 #tooltipbalancesDiv, #tooltipstockPricesDiv2 {
@@ -426,9 +529,9 @@ _:-ms-input-placeholder, :root .demo-graph {
     -webkit-font-smoothing: antialiased;
     color: #757575;
     font-size: 20px;
-    opacity = "null";
-    fill = "#9E9E9E";
-    dx = "0px";
+    opacity: "null";
+    fill: "#9E9E9E";
+    dx: "0px";
 }
 
 .secondTitle {
@@ -437,9 +540,9 @@ _:-ms-input-placeholder, :root .demo-graph {
     -webkit-font-smoothing: antialiased;
     color: #9E9E9E;
     font-size: 16px;
-    opacity = "null";
-    fill = "#9E9E9E";
-    dx = "0px";
+    opacity: "null";
+    fill: "#9E9E9E";
+    dx: "0px";
 }
 
 .mdl-data-table {
@@ -462,9 +565,6 @@ _:-ms-input-placeholder, :root .demo-graph {
     color: rgba(255, 255, 255, 0.56);
     border-image-width: 0;
 
-    opacity = "null";
-    fill = "#9E9E9E";
-    dx = "0px";
 }
 
 #sumStockTableDiv {
@@ -481,9 +581,7 @@ _:-ms-input-placeholder, :root .demo-graph {
     font-size: 16px;
 
     font-weight: normal;
-    opacity = "null";
-    fill = "#9E9E9E";
-    dx = "0px";
+
     padding: 4px 18px 0;
     vertical-align: middle;
 }
@@ -516,9 +614,6 @@ _:-ms-input-placeholder, :root .demo-graph {
     color: #757575;
     font-size: 14px;
 
-    opacity = "null";
-    fill = "#9E9E9E";
-    dx = "0px";
     padding: 4px 18px 0;
     vertical-align: middle;
     line-height: 14px;

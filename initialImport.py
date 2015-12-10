@@ -13,8 +13,8 @@ from helperfunctions import convert
 import FXImport
 
 engine = create_engine('sqlite:///money.db')
-demo = True  # turns on demo transactions
-mintacct = False  # turns on mint account download
+demo = False  # turns on demo transactions
+mintacct = True  # turns on mint account download
 pd.options.mode.chained_assignment = None  # turns off warning for chained indexing
 
 def initialStartup():
@@ -30,6 +30,7 @@ def initialStartup():
     fximport()
     totalbalances()
     NIFX()
+    importGoals()
 
 
 
@@ -174,7 +175,7 @@ def totalbalances():
     df = df.sort('transdate')
     df = df[df['transdate'] <= datetime.today()]    # removes any future dates
 
-    df['USDAmount'] = df.apply(lambda row: convert(row['balance'],row['Currency'],row['Rate']), axis=1)
+    df['USDAmount'] = df.apply(lambda row: convert(row['balance'], row['Currency'], row['Rate']), axis=1)
     df['CADAmount'] = df.USDAmount * df.Rate
 
     df.balance = df.balance.round(2)
@@ -240,3 +241,8 @@ def findFX(df):
 
     return df
 
+
+def importGoals():
+
+    df = pd.read_csv('CSVs/Goal.csv', parse_dates = ['transdate'])
+    df.to_sql('goal', engine, if_exists = 'replace', index=False)

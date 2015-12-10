@@ -139,6 +139,21 @@ def sqlcurrentbalance():
       DESC
     '''
 
+def sqlcurrentbalancebyaccount():
+    return '''
+    SELECT
+      B1.transdate      AS transdate,
+      B1.owner          AS owner,
+      B1.Rate           AS FXRate,
+      B1.AccountName    AS AccountName,
+      B1.USDAmount AS balance,
+      B2.USDAmount AS priorbalance
+    FROM balances B1
+      INNER JOIN balances B2 on date(B1.transdate) = date(B2.transdate, '-1 month') and B1.AccountName = B2.AccountName
+    WHERE date(B1.transdate) = date(current_date,'localtime') OR date(B1.transdate) = date(current_date, 'localtime', '-1 month')
+    ORDER BY B1.USDAmount DESC
+    '''
+
 def accounttypeowner():
     return '''
 
@@ -199,10 +214,10 @@ def sqlbudget():
            FROM
              transactions
              INNER JOIN bankaccounts ON bankaccounts.MintAccountName = transactions.accountname
-           WHERE Date2 = date('2015-11-30')
+           WHERE Date2 = date(current_date, 'start of month', '+1 month', '-1 day')
            GROUP BY transactions.category, bankaccounts.Owner, Date2) AS T1
         ON T1.Date2 = Date1 AND Owner1 = T1.Owner2 AND Category1 = T1.Category2
-    WHERE Date1 = date('2015-11-30')) as T2
+    WHERE Date1 = date(current_date, 'start of month', '+1 month', '-1 day')) as T2
     inner join fxrates on date(fxrates.FXDate) = T2.Date1;
     '''
 
@@ -234,10 +249,10 @@ def sqloverallbudget():
                      FROM
                        transactions
                        INNER JOIN bankaccounts ON bankaccounts.MintAccountName = transactions.accountname
-                     WHERE Date2 = date('2015-11-30')
+                     WHERE Date2 = date(current_date, 'start of month', '+1 month', '-1 day')
                      GROUP BY transactions.category, bankaccounts.Owner, Date2) AS T1
            ON T1.Date2 = Date1 AND Owner1 = T1.Owner2 AND Category1 = T1.Category2
-       WHERE Date1 = date('2015-11-30')) AS T2
+       WHERE Date1 = date(current_date, 'start of month', '+1 month', '-1 day')) AS T2
       INNER JOIN fxrates ON date(fxrates.FXDate) = T2.Date1
     GROUP BY T2.Date1, T2.Owner1, fxrates.Rate
     '''
@@ -525,9 +540,9 @@ def sqlSumSpendTable():
       T1.monthdate AS transdate,
       T1.Owner,
       FX2.Rate,
-      min(T1.Spend, 5750),
-      max(5750 - T1.Spend, 0) as Budget,
-      max(0, T1.Spend - 5750) as Remaining
+      min(T1.Spend, 5500),
+      max(5500 - T1.Spend, 0) as Budget,
+      max(0, T1.Spend - 5500) as Remaining
 
     FROM
       (SELECT
@@ -542,7 +557,7 @@ def sqlSumSpendTable():
          INNER JOIN bankaccounts ON transactions.accountname = bankaccounts.MintAccountName
          INNER JOIN fxrates AS FX1 ON transactions.transdate = FX1.FXDate
          INNER JOIN categories ON categories.Category = transactions.category
-       WHERE monthdate >= date(current_date, '-6 month') AND categories.Spending
+       WHERE monthdate >= date(current_date, '-6 month') AND categories.Spending AND bankaccounts.JointColumn = "Joint"
        GROUP BY monthdate, bankaccounts.Owner) AS T1
       INNER JOIN fxrates AS FX2 ON monthdate = date(FX2.FXDate)
     '''
@@ -553,4 +568,30 @@ def sqlowners():
 
     select distinct bankaccounts.Owner
       from bankaccounts
+    '''
+
+
+
+def sqlGoalChart():
+    return '''
+
+    SELECT
+      "Actual" as AccountName,
+      date(balances.transdate) as transdate,
+      balances.owner as owner,
+      sum(balances.USDAmount) as balance,
+      balances.Rate as FXRate
+    FROM balances
+    WHERE date(balances.transdate) = date(balances.transdate, 'start of month', '+1 month', '-1 day')
+    GROUP BY balances.owner, date(balances.transdate), balances.Rate
+    UNION
+    SELECT
+      "Goal" as AccountName,
+      date(goal.transdate),
+      "Dan" as owner,
+      (goal.amount) as balance,
+      fxrates.Rate as FXRate
+    FROM goal
+      INNER JOIN fxrates ON date(goal.transdate) = date(fxrates.FXDate)
+      where date(goal.transdate) <= current_date
     '''

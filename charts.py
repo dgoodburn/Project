@@ -213,6 +213,15 @@ def getowners(): ### return list of owners
     return df
 
 
+def accountbalancesbyaccount():
+
+    a = sqlqueries.sqlcurrentbalancebyaccount()
+
+    df = pd.read_sql(a, engine, parse_dates='transdate')
+
+    return returnTable(df)
+
+
 def owners():
     return returnTable(getowners())
 
@@ -229,3 +238,16 @@ def owners2(): ### return list of owners
     conn.close()
     return owners
 
+
+def goalData():
+
+    a = sqlqueries.sqlGoalChart()
+
+    df = pd.read_sql(a, engine, parse_dates='transdate')
+
+    df = pd.pivot_table(df, index=['transdate','owner', 'FXRate'],values=["balance"],columns=['AccountName'],fill_value=0).reset_index()
+    ### takes daily balance data and returns dataframe with each account as separate column
+
+    droplevel(df) # adjusts column names that occurred from pivoting
+    print returnTable(df)
+    return returnTable(df)

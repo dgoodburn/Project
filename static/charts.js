@@ -52,7 +52,13 @@ var chart = function (div, data, divcol, firstTitle, secondTitle, sumcol, valSta
             hAxis: {baselineColor: GLOBALS.greyfont, textStyle: {color: GLOBALS.greyfont}},
             vAxis: {textStyle: {color: GLOBALS.greyfont}, format: 'short', viewWindowMode: 'maximized'},
             titleTextStyle: {color: GLOBALS.greyfont, bold: 'false', fontSize: 16},
-            tooltip: {isHtml: true}
+            tooltip: {isHtml: true},
+            annotations: {
+                style: 'line',
+                textStyle: {
+                    opacity: 0
+                }
+            }
         }
 
     });
@@ -63,7 +69,7 @@ var chart = function (div, data, divcol, firstTitle, secondTitle, sumcol, valSta
         'containerId': this.controldiv,
         'state': {
             'range': {
-                start: this.filterStartDate
+                //start: this.filterStartDate
             }
         },
 
@@ -77,7 +83,13 @@ var chart = function (div, data, divcol, firstTitle, secondTitle, sumcol, valSta
                     seriesType: 'bars',
                     lineWidth: 0,
                     vAxes: {0: {viewWindowMode: 'maximized'}},
-                    colors: GLOBALS.chartcolours
+                    colors: GLOBALS.chartcolours,
+                    annotations: {
+                        style: 'line',
+                        textStyle: {
+                            opacity: 0
+                        }
+                    }
                 }
             }
         }
@@ -323,7 +335,7 @@ var chart = function (div, data, divcol, firstTitle, secondTitle, sumcol, valSta
 
 
     this.htmldiv = '\
-        <div class="demo-graphs mdl-shadow--2dp mdl-color--white mdl-cell mdl-cell--' + this.divcol + '-col">\
+        <div class="demo-graphs mdl-shadow--2dp mdl-color--white mdl-cell mdl-cell--' + this.divcol + '-col ' + this.cardDiv + '">\
             <div class="firstTitle">' + this.firstTitle + '</div>\
             <div class="secondTitle">' + this.secondTitle + '</div>\
             <div id="' + this.dashboarddiv + '">\

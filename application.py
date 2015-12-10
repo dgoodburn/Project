@@ -54,6 +54,10 @@ def nifxpage():
 
     return jsonify(NIFXdata=charts.NIFXdata())
 
+@application.route('/balancebyaccount/')
+def balancebyaccount():
+
+    return jsonify(balancedatabyaccount=charts.accountbalancesbyaccount())
 
 @application.route('/balances/')
 def balancespage():
@@ -136,6 +140,12 @@ def transactionsajaxaage():
     return jsonify(x=x, y=y)
 
 
+@application.route('/goal/')
+def goalpage():
+
+    return jsonify(goalData=charts.goalData())
+
+
 @application.route('/accrual/')
 def accrualpage():
 
@@ -147,5 +157,5 @@ def accrualpage():
 
 
 if __name__ == '__main__':
-    application.debug = False
+    application.debug = True
     application.run(host='0.0.0.0', port=5000)

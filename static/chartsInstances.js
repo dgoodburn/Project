@@ -33,8 +33,8 @@ function initializeBalanceChart(balanceData, currentBalanceData, chartOrder) {
     balances.bottomViewBuffer = 0;
 
     balances.setMultipleOptions([
-        ['lineWidth', 0.05],
-        ['areaOpacity', 0.2],
+        ['lineWidth', 0.2],
+        ['areaOpacity', 0.3],
         ['tooltip.trigger', 'none'],
         ['hAxis.gridlines.count', 0],
         ['vAxis.gridlines.count', 0],
@@ -46,7 +46,8 @@ function initializeBalanceChart(balanceData, currentBalanceData, chartOrder) {
         ['backgroundColor.fill', 'transparent'],
         ['focusTarget', 'datum'],
         ['crosshair.opacity', 0.3],
-        ['crosshair.trigger', 'both']
+        ['crosshair.trigger', 'both'],
+        ['colors', [GLOBALS.chartcolours[0],GLOBALS.chartcolours[3]]]
 
     ]);
 
@@ -726,6 +727,42 @@ function initializeNetIncomeChart(netincomedata, chartOrder) {
 }
 
 
+function initializebalancesbyaccountChart(balancedatabyaccount, chartOrder) {
+
+    balancesTable = new chart(
+        div = 'balancesTableDiv',
+        data = balancedatabyaccount,
+        divcol = 6,
+        firstTitle = 'Balances',
+        secondTitle = 'Current and One Month Prior',
+        sumcol = false,
+        valStartCol = 4
+    );
+
+    GLOBALS.grid.append('<div class="demo-graphs mdl-cell mdl-cell--12-col" style="padding:0px 0px"><div id="balancesTableDiv" style="width:100%; "></div></div>');
+
+    var balancesTable2 = new table.MyTable(document.getElementById('balancesTableDiv'));
+
+    balancesTable.redraw = function () {
+
+        balancesTable.dataOwnerJoin = balancesTable.dataJoin(balancesTable.dataTable);
+        balancesTable.dataView = balancesTable.dataOwnerGroup(balancesTable.dataOwnerJoin);
+        balancesTable.dataView.removeColumns(0, 2);
+
+        GLOBALS.formatdecimals.format(balancesTable.dataView, 1);
+        GLOBALS.formatdecimals.format(balancesTable.dataView, 2);
+
+        balancesTable2.draw(balancesTable.dataView, {showLineNumber: true});
+
+    };
+
+    balancesTable.dataTable = balancesTable.initialDraw(balancesTable.data);
+    balancesTable.redraw()
+
+}
+
+
+
 function indtranstable(x, y) {
 
     var buttonDiv = '\
@@ -810,3 +847,8 @@ function indtranstable(x, y) {
 
 
 }
+
+
+
+
+

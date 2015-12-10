@@ -63,6 +63,18 @@ function loadHomePage() {
 }
 
 
+function loadForecastPage() {
+
+    clearPage();
+
+    return $.when(
+
+        $.getJSON($SCRIPT_ROOT + '/goal', {}, function (data) { initializeGoalChart(data.goalData, 3); })
+
+    ).done(function() { $('.demo-graphs').css("opacity", 1); });
+}
+
+
 
 function loadTransactionsPage() {
 
@@ -117,9 +129,11 @@ function loadBalancesPage() {
 
     return $.when(
 
+        $.getJSON($SCRIPT_ROOT + '/NIFX', {}, function (data) { initializeNIFXChart(data.NIFXdata, 1); }),
+
         $.getJSON($SCRIPT_ROOT + '/balances', {}, function (data) { initializeBalanceChart(data.balanceData, data.currentBalanceData, 0); }),
 
-        $.getJSON($SCRIPT_ROOT + '/NIFX', {}, function (data) { initializeNIFXChart(data.NIFXdata, 1); })
+        $.getJSON($SCRIPT_ROOT + '/balancebyaccount', {}, function (data) { initializebalancesbyaccountChart(data.balancedatabyaccount, 2); })
 
     ).done(function() { $('.demo-graphs').css("opacity", 1); });
 

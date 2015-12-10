@@ -17,6 +17,8 @@ def getStockPrices(): ### returns dataframe of stockprice history
     # list all stocks owned as they would be entered into API
     # need to update to read from database automatically and generate list
 
+    dffix = False
+
     for i in range(len(x)):
         try:
             if x[i][0] != 'MoneyMarket':
@@ -28,14 +30,18 @@ def getStockPrices(): ### returns dataframe of stockprice history
                     df = df.append(df2, ignore_index=True)
         except:
             print x[i][0] + ' caused an error.'
+            if not dffix:
+                dffix = addoldsymbol(x[i][0])
+            else:
+                dffix = dffix.append(addoldsymbol(x[i][0]), ignore_index=True)
 
     # iterate through called stock price list. append list of stock prices to list
 
     df.rename(columns={'Close': 'Price'}, inplace=True)     # rename column to match database
-
     df = df[['Date','Symbol','Price']]
-    df.columns = ['transdate','symbol','price']
+    df = df.append(dffix, ignore_index=True)
 
+    df.columns = ['transdate','symbol','price']
 
     # append MoneyMarket at price=1 for all dates since not an actual stockticker
 
@@ -50,6 +56,13 @@ def getStockPrices(): ### returns dataframe of stockprice history
 
     df.to_sql('stocksprices', engine, if_exists = 'replace')
 
+
+def addoldsymbol(symbol):
+
+    df = pd.read_csv("Common/StockPrices.csv")
+    df = df[df['Symbol'] == symbol]
+    df = df[["Date", "Symbol", "Price"]]
+    return df
 
 
 def stocknames():  ### returns list of all stock symbols that have been transacted
@@ -75,7 +88,7 @@ def stockbalances(): ### joins stock transactions/balances with prices and loads
       sum(stocktransactions.numshares) as numshares,
       stocksprices.price as price
     FROM datestable, stocktransactions
-      left join stocksprices on (stocksprices.transdate) = (datestable.transdate) and stocksprices.symbol = stocktransactions.symbol
+      left join stocksprices on date(stocksprices.transdate) = date(datestable.transdate) and stocksprices.symbol = stocktransactions.symbol
     WHERE datestable.transdate <= current_date AND datestable.transdate >= date("2013-01-01") AND
           datestable.transdate >= stocktransactions.transdate
     GROUP BY datestable.transdate, stocktransactions.symbol, stocktransactions.accountname, stocksprices.price
