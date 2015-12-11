@@ -6,9 +6,10 @@ from sqlalchemy import create_engine
 
 from helperfunctions import returnTable, droplevel
 import sqlqueries
+import instance
 
-engine = create_engine('sqlite:///money.db')
-#owners = ['Emma','Dan','Joint']
+database = instance.getDatabase()
+engine = create_engine(database)
 
 def spendingdata():
 
@@ -249,5 +250,5 @@ def goalData():
     ### takes daily balance data and returns dataframe with each account as separate column
 
     droplevel(df) # adjusts column names that occurred from pivoting
-    print returnTable(df)
+
     return returnTable(df)

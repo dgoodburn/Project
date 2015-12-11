@@ -60,3 +60,36 @@ def droplevel(df, col1='transdate', col2='owner', col3='fxrate'):
     names[0:3] = [col1, col2, col3]
     df.columns = names
     return df
+
+
+
+def cprof(func, *args, **kwargs):
+
+    import cProfile
+    import pstats
+
+    def func_wrapper(*args, **kwargs):
+
+        print 1
+
+        cProfile.run(func.__name__, 'restats')
+        p = pstats.Stats('restats')
+        p.sort_stats('cumulative').print_stats(10)
+
+    return func_wrapper
+
+import time
+
+timeiteration = 0
+start = time.time()
+
+def timer():
+
+
+    global start
+    global timeiteration
+
+    new = time.time()
+    timeiteration += 1
+    print timeiteration, new - start
+    start = new

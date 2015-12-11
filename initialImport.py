@@ -3,46 +3,66 @@ __author__ = 'emmaachberger'
 import pandas as pd
 import numpy as np
 from sqlalchemy import create_engine
-
-
+import sqlalchemy
+import instance
 
 import sqlqueries
 import stockPricesImport
 from mintTransactions import Mint
-from helperfunctions import convert
+from helperfunctions import convert, timer
 import FXImport
+from pandas.io import sql
 
-engine = create_engine('sqlite:///money.db')
+import time
+
+
+database = instance.getDatabase()
+engine = create_engine(database)
+
 demo = False  # turns on demo transactions
 mintacct = True  # turns on mint account download
 pd.options.mode.chained_assignment = None  # turns off warning for chained indexing
 
+
+
 def initialStartup():
 
     importDatesTable()
+    timer()
+
     importBankAccounts()
+    timer()
+
     budgetimport()
+    timer()
+
     categoryimport()
+    timer()
+
     importStockTransactions()
+    timer()
+
     stockPricesImport.getStockPrices()
+    timer()
+
     stockPricesImport.stockbalances()
+    timer()
+
     importBankTransactions()
+    timer()
+
     fximport()
+    timer()
+
     totalbalances()
+    timer()
+
     NIFX()
+    timer()
+
     importGoals()
+    timer()
 
-
-
-def initialdataimport():
-    ### run without stockprices
-
-    importStockTransactions()
-    stockPricesImport.stockbalances()
-    importBankTransactions()
-    fximport()
-    totalbalances()
-    NIFX()
 
 
 def importBankAccounts():
@@ -52,7 +72,10 @@ def importBankAccounts():
     else:
         df = pd.read_csv('CSVs/BankAccounts.csv')
 
-    df.to_sql('bankaccounts', engine, if_exists = 'replace', index=False)
+    df.to_sql('bankaccounts', engine, if_exists = 'replace', index=False, dtype={'AccountName': sqlalchemy.types.VARCHAR(length=30), 'MintAccountName': sqlalchemy.types.VARCHAR(length=30)})
+
+    sql.execute("CREATE INDEX AccountName_index ON money.bankaccounts (AccountName);", engine)
+    sql.execute("CREATE INDEX MintAccountName_index ON money.bankaccounts (MintAccountName);", engine)
 
 
 def importStockTransactions():
@@ -62,30 +85,46 @@ def importStockTransactions():
     else:
         df = pd.read_csv('CSVs/StockTransactions.csv', parse_dates = ['transdate'])
 
-    df.to_sql('stocktransactions', engine, if_exists = 'replace', index = False)
-
+    df.to_sql('stocktransactions', engine, if_exists = 'replace', index = False, dtype={'symbol': sqlalchemy.types.VARCHAR(length=20)})
+    sql.execute("CREATE INDEX Stocktransaction_transdate_index ON money.stocktransactions (transdate);", engine)
+    sql.execute("CREATE INDEX Stocktransaction_symbol_index ON money.stocktransactions (symbol);", engine)
 
 
 def importBankTransactions():
     ### imports old transactions, Emma/Dan mint transactions, appends together and inserts into database
-
+    start = time.time()
     if demo: ## only used to demo account to add dummy data. Is turned on above.
         df = pd.read_csv('DemoData/demotransactions.csv', parse_dates = ['transdate'])
+
     else:
         df = pd.read_csv('CSVs/oldtransactions.csv', parse_dates = ['transdate'])
         df_accrual = pd.read_csv('CSVs/accrual.csv', parse_dates = ['transdate'])
-
         df = df.append(df_accrual)
+
+        new = time.time()
+        start = new
+
         df = df.append(mintImport())
+
+    new = time.time()
+    start = new
 
     df = df.append(stockPricesImport.stockincome())
 
+    new = time.time()
+    start = new
+
     df = df.sort('transdate')
 
-    df.to_sql('transactions', engine, if_exists = 'replace', index=False)
+    df.to_sql('transactions', engine, if_exists = 'replace', index=False, dtype={'accountname': sqlalchemy.types.VARCHAR(length=30)})
 
+    sql.execute("CREATE INDEX transactions_transdate_index ON money.transactions (transdate);", engine)
+    sql.execute("CREATE INDEX transactions_accountname_index ON money.transactions (accountname);", engine)
 
-def mintImport():
+    print "Done Bank Transactions"
+
+"""
+def mintImport(): # use if parallel processing has issues
 
     import instance
 
@@ -123,6 +162,68 @@ def mintImport():
     df = df[['id','transdate','description','amount','category','accountname']]
 
     return df
+"""
+
+def getMintTransactions(accounts):
+
+    try:
+        mint = Mint(email = accounts[0], password = accounts[1])
+        mint.initiate_account_refresh()
+        df = mint.get_transactions()
+        df.to_csv('CSVs/' + accounts[2])
+
+        print accounts[0] + " accepted correctly."
+
+        return df
+    except:
+        print accounts[0] + " was not accepted."
+        return pd.DataFrame()
+
+
+def mintImport():
+
+    import instance
+    from multiprocessing import Pool
+
+    mintAccounts = instance.mintaccounts()
+
+    if mintacct:
+
+        pool = Pool()
+        result_list = []
+
+        def log_result(result):
+            result_list.append(result)
+
+        for key, accounts in mintAccounts.iteritems():
+            pool.apply_async(getMintTransactions, args = [accounts], callback= log_result)
+
+        pool.close()
+        pool.join()
+
+    else:
+        print "Mint accounts intentionally not imported. Change 'mintacct' variable to 'True'."
+
+    df = pd.DataFrame()
+    columns = ['id','transdate','description','originaldescription','amount','debitcredit','category','accountname','labels','notes']
+
+    for key, accounts in mintAccounts.iteritems():
+        df2 = pd.read_csv('CSVs/' + accounts[2], parse_dates = ['Date'])
+        df2.columns = columns
+        if df.empty:
+            df = df2
+        else:
+            df = df.append(df2)
+
+    df.drop('id',axis=1,inplace=True)
+
+    df.loc[df['debitcredit'] == 'debit', ['amount']] *= -1     # reverses sign for 'debit' transactions
+
+    df.reset_index(level=0, inplace=True)
+    df.columns = ['id','transdate','description','originaldescription','amount','debitcredit','category','accountname','labels','notes']
+    df = df[['id','transdate','description','amount','category','accountname']]
+
+    return df
 
 
 def importDatesTable():
@@ -133,7 +234,11 @@ def importDatesTable():
     tableofdates = table_of_dates(2006,1,1,'D')
     tableofdates.reset_index(inplace=True)
 
-    tableofdates.to_sql('datestable', engine, if_exists = 'replace', index=False)
+
+    tableofdates.to_sql('datestable', engine, if_exists = 'replace', index=False, index_label='transdate')
+    sql.execute("CREATE INDEX transdate_index ON money.datestable (transdate);", engine)
+
+    print "Done Importing Datestable"
 
 
 def fximport():
@@ -142,6 +247,9 @@ def fximport():
         FXImport.fximport()
     df = pd.read_csv('Common/FX rates.csv', parse_dates = ['FXDate'])
     df.to_sql('fxrates', engine, if_exists = 'replace')
+    sql.execute("CREATE INDEX FX_FXdate_index ON money.fxrates (FXDate);", engine)
+
+    print "Done FX Import"
 
 
 def budgetimport():
@@ -152,12 +260,14 @@ def budgetimport():
         df = pd.read_csv('CSVs/budget.csv')
 
     df.to_sql('budget', engine, if_exists = 'replace')
+    print "Done importing budget"
 
 
 def categoryimport():
 
     df = pd.read_csv('Common/categories.csv')
     df.to_sql('categories', engine, if_exists = 'replace')
+    print "Done importing category"
 
 
 def totalbalances():
@@ -170,12 +280,20 @@ def totalbalances():
     df = pd.read_sql(a, engine, parse_dates='transdate')
 
     df['amount'] = df['amount'].fillna(0)
+
     df['balance'] = np.cumsum(df.groupby(['AccountName'])['amount'])    # adds column of running total balances
+
     df = df[df['balance'] != 0 ]    # removes zero balances which should be balances before account started
+
     df = df.sort('transdate')
+
     df = df[df['transdate'] <= datetime.today()]    # removes any future dates
 
-    df['USDAmount'] = df.apply(lambda row: convert(row['balance'], row['Currency'], row['Rate']), axis=1)
+    #df['USDAmount'] = df.apply(lambda row: convert(row['balance'], row['Currency'], row['Rate']), axis=1)
+
+    df['USDAmount'] = df.balance / df.Rate
+    df.ix[df.Currency=='USD', 'USDAmount'] = df.ix[df.Currency=='USD', 'balance']
+
     df['CADAmount'] = df.USDAmount * df.Rate
 
     df.balance = df.balance.round(2)
@@ -183,6 +301,10 @@ def totalbalances():
     df.CADAmount = df.CADAmount.round(2)
 
     df.to_sql('balances', engine, if_exists = 'replace', index=False)
+
+    sql.execute("CREATE INDEX balances_transdate_index ON money.balances (transdate);", engine)
+
+    print "Done Total Balances"
 
 
 def NIFX():
@@ -200,19 +322,27 @@ def NIFX():
     df['USD Amount'] = np.round(df['USD Amount'],decimals=2)
     df['CAD Amount'] = np.round(df['CAD Amount'],decimals=2)
     df['Date'] = pd.DatetimeIndex(df['Date']) + pd.offsets.MonthEnd(0)
+
     df = pd.pivot_table(df, index=['Date','Owner'],values=["USD Amount","CAD Amount"],columns=['Category'],fill_value=0).reset_index()
 
     df.columns = df.columns.droplevel()
     df.columns = ['Date','Owner','USD FX Gain/Loss','USD Investments','USD Income','CAD FX Gain/Loss','CAD Investments','CAD Income']
     df.to_sql('googlechartsmonthlynetincome', engine, if_exists = 'replace', index=False)
 
+    print "Done NIFX"
+
 
 def findFX(df):
 
+    start = time.time()
     df[['nativebalance','USbalance','CAbalance']] = np.cumsum(df.groupby(['Owner','Currency'])[['Native Amount','USD Amount','CAD Amount']])
     ### total of (all transactions in native currency multiplied by transaction date rate)
 
-    df['USDbalance'] = df.apply(lambda row: convert(row['nativebalance'], row['Currency'], row['Rate']), axis=1)
+    #df['USDbalance'] = df.apply(lambda row: convert(row['nativebalance'], row['Currency'], row['Rate']), axis=1)
+
+    df['USDbalance'] = df.nativebalance / df.Rate
+    df.ix[df.Currency=='USD', 'USDbalance'] = df.ix[df.Currency=='USD', 'nativebalance']
+
     df['CADbalance'] = df['USDbalance'] * df['Rate']
     ## total of all transactions in native currency converted at ending rate
 
@@ -223,7 +353,6 @@ def findFX(df):
 
     df['transdate'] = pd.DatetimeIndex(df['transdate'])
     df['PrevDate'] = pd.DatetimeIndex(df['transdate']) + pd.offsets.MonthEnd(-1)
-
 
     df.iloc[0:4,3:5] = 0.0 ### change first three balances to zero. Needed for pad filling step below.
 
@@ -246,3 +375,4 @@ def importGoals():
 
     df = pd.read_csv('CSVs/Goal.csv', parse_dates = ['transdate'])
     df.to_sql('goal', engine, if_exists = 'replace', index=False)
+    print "Done Import Goals"

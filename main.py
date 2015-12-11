@@ -1,6 +1,5 @@
 __author__ = 'emmaachberger'
 
-from initialImport import initialStartup, initialdataimport
+from initialImport import initialStartup
 
-#initialdataimport()
 initialStartup()

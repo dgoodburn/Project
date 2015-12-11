@@ -131,14 +131,6 @@ def initiate_account_refresh(email, password):
     mint = Mint.create(email, password)
     return mint.initiate_account_refresh()
 
-"""
-def main():
-    import getpass
-    import argparse
-
-if __name__ == '__main__':
-    main()
-"""
 
 
 

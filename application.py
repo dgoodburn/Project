@@ -2,9 +2,12 @@ from flask import Flask, jsonify, render_template, request
 import charts
 from sqlalchemy import create_engine
 from initialImport import initialStartup
+import instance
 
 application = Flask(__name__)
-engine = create_engine('sqlite:///money.db')
+
+database = instance.getDatabase()
+engine = create_engine(database)
 
 """
 @application.before_first_request

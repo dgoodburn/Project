@@ -4,9 +4,10 @@ import requests
 import datetime
 import pandas as pd
 from sqlalchemy import create_engine
+import instance
 
-
-engine = create_engine('sqlite:///money.db')
+database = instance.getDatabase()
+engine = create_engine(database)
 
 start_date = False  # False or Format "YYYY-MM-DD"
 end_date = False  # False or Format "YYYY-MM-DD"
@@ -58,7 +59,10 @@ def uploadFX(rates):
     table = rates[0]
     today = rates[1]
 
-    df = pd.read_sql_table('fxrates', engine, parse_dates='FXDate')
+    try:
+        df = pd.read_sql_table('fxrates', engine, parse_dates='FXDate')
+    except:
+        df = pd.read_csv('Common/FX rates.csv', parse_dates = ['FXDate'])
 
     max_date = df['FXDate'].max().date()
     if max_date < last_date:

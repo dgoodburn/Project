@@ -3,11 +3,16 @@ __author__ = 'emmaachberger'
 import datetime
 
 import pandas as pd
+from pandas.io import sql
 from sqlalchemy import create_engine
+import sqlalchemy
 
 import sqlqueries
 
-engine = create_engine('sqlite:///money.db')
+import time
+import instance
+database = instance.getDatabase()
+engine = create_engine(database)
 
 def getStockPrices(): ### returns dataframe of stockprice history
 
@@ -54,7 +59,9 @@ def getStockPrices(): ### returns dataframe of stockprice history
     df2 = df2[['transdate','symbol','price']]
     df = df.append(df2)
 
-    df.to_sql('stocksprices', engine, if_exists = 'replace')
+    df.to_sql('stocksprices', engine, if_exists = 'replace', dtype={'symbol': sqlalchemy.types.VARCHAR(length=20), 'transdate': sqlalchemy.types.DATETIME()})
+    sql.execute("CREATE INDEX Stocksprices_transdate_index ON money.stocksprices (transdate);", engine)
+    sql.execute("CREATE INDEX Stocksprices_symbol_index ON money.stocksprices (symbol);", engine)
 
 
 def addoldsymbol(symbol):
@@ -95,12 +102,28 @@ def stockbalances(): ### joins stock transactions/balances with prices and loads
     order by datestable.transdate desc
     """
 
+    a = """
+    SELECT DISTINCT
+      datestable.transdate as transdate,
+      stocktransactions.symbol,
+      stocktransactions.accountname,
+      sum(stocktransactions.numshares) as numshares,
+      stocksprices.price as price
+    FROM datestable CROSS JOIN stocktransactions
+      left join stocksprices on stocksprices.transdate = datestable.transdate and stocksprices.symbol = stocktransactions.symbol
+    WHERE datestable.transdate <= current_date AND datestable.transdate >= date("2013-01-01") AND
+          datestable.transdate >= stocktransactions.transdate
+    GROUP BY datestable.transdate, stocktransactions.symbol, stocktransactions.accountname, stocksprices.price
+    """
+
     df = pd.read_sql_query(a, engine, parse_dates='transdate')
 
     df = df.sort(columns=['symbol','transdate']).fillna(method='pad')
 
     df['prevprice'] = df['price'].shift(+1)      # adds columns showing previous day price
+
     df.loc[df.groupby('symbol',as_index=False).head(1).index,'prevprice'] = df.price
+
     df['netchange'] = df.numshares * (df.price - df.prevprice)
     df['balance'] = df.numshares * df.price
 
@@ -110,11 +133,13 @@ def stockbalances(): ### joins stock transactions/balances with prices and loads
 def stockincome():
 ### returns dataframe of all stock gains/losses to append to transaction dataframe
 
+    start = time.time()
     stockbalances()
 
     a = sqlqueries.sqlstockincome()
 
     df = pd.read_sql(a, engine, parse_dates='transdate')
+
 
     return df
 
