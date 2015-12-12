@@ -57,7 +57,7 @@ function initializeGoalChart(goaldata, chartOrder) {
 
     setTimeout(function () {
         fadeDivs('slow', 1);
-    }, 1500);
+    }, 1000);
 
 
     function addForecasts(dataView) {
