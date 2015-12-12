@@ -9,7 +9,7 @@ import instance
 import sqlqueries
 import stockPricesImport
 from mintTransactions import Mint
-from helperfunctions import convert, timer
+from helperfunctions import timermultifunc
 import FXImport
 from pandas.io import sql
 
@@ -27,42 +27,20 @@ pd.options.mode.chained_assignment = None  # turns off warning for chained index
 
 def initialStartup():
 
-    importDatesTable()
-    timer()
-
-    importBankAccounts()
-    timer()
-
-    budgetimport()
-    timer()
-
-    categoryimport()
-    timer()
-
-    importStockTransactions()
-    timer()
-
-    stockPricesImport.getStockPrices()
-    timer()
-
-    stockPricesImport.stockbalances()
-    timer()
-
-    importBankTransactions()
-    timer()
-
-    fximport()
-    timer()
-
-    totalbalances()
-    timer()
-
-    NIFX()
-    timer()
-
-    importGoals()
-    timer()
-
+    timermultifunc([
+        importDatesTable,
+        importBankAccounts,
+        budgetimport,
+        categoryimport,
+        importStockTransactions,
+        stockPricesImport.getStockPrices,
+        stockPricesImport.stockbalances,
+        importBankTransactions,
+        fximport,
+        totalbalances,
+        NIFX,
+        importGoals
+    ])
 
 
 def importBankAccounts():
@@ -121,7 +99,6 @@ def importBankTransactions():
     sql.execute("CREATE INDEX transactions_transdate_index ON money.transactions (transdate);", engine)
     sql.execute("CREATE INDEX transactions_accountname_index ON money.transactions (accountname);", engine)
 
-    print "Done Bank Transactions"
 
 """
 def mintImport(): # use if parallel processing has issues
@@ -238,7 +215,6 @@ def importDatesTable():
     tableofdates.to_sql('datestable', engine, if_exists = 'replace', index=False, index_label='transdate')
     sql.execute("CREATE INDEX transdate_index ON money.datestable (transdate);", engine)
 
-    print "Done Importing Datestable"
 
 
 def fximport():
@@ -249,7 +225,6 @@ def fximport():
     df.to_sql('fxrates', engine, if_exists = 'replace')
     sql.execute("CREATE INDEX FX_FXdate_index ON money.fxrates (FXDate);", engine)
 
-    print "Done FX Import"
 
 
 def budgetimport():
@@ -260,14 +235,12 @@ def budgetimport():
         df = pd.read_csv('CSVs/budget.csv')
 
     df.to_sql('budget', engine, if_exists = 'replace')
-    print "Done importing budget"
 
 
 def categoryimport():
 
     df = pd.read_csv('Common/categories.csv')
     df.to_sql('categories', engine, if_exists = 'replace')
-    print "Done importing category"
 
 
 def totalbalances():
@@ -304,7 +277,6 @@ def totalbalances():
 
     sql.execute("CREATE INDEX balances_transdate_index ON money.balances (transdate);", engine)
 
-    print "Done Total Balances"
 
 
 def NIFX():
@@ -328,8 +300,6 @@ def NIFX():
     df.columns = df.columns.droplevel()
     df.columns = ['Date','Owner','USD FX Gain/Loss','USD Investments','USD Income','CAD FX Gain/Loss','CAD Investments','CAD Income']
     df.to_sql('googlechartsmonthlynetincome', engine, if_exists = 'replace', index=False)
-
-    print "Done NIFX"
 
 
 def findFX(df):
@@ -375,4 +345,3 @@ def importGoals():
 
     df = pd.read_csv('CSVs/Goal.csv', parse_dates = ['transdate'])
     df.to_sql('goal', engine, if_exists = 'replace', index=False)
-    print "Done Import Goals"

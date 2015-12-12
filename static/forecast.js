@@ -34,13 +34,6 @@ function initializeGoalChart(goaldata, chartOrder) {
 
         this.dataView = addForecasts(this.dataView);
 
-        //this.dataView = addNextYearDates(this.dataView);
-        //this.futureMonthlyGoal = getMonthlyGoalAmount((this.dataView));
-
-        //this.dataView = addFutureDates(this.dataView);
-        //this.dataView = addRetirementDates(this.dataView);
-        //this.dataView = addIntervals(this.dataView);
-
         for (var i=1; i<5; i++) {
             GLOBALS.formatamount.format(this.dataView, i);
         }
@@ -58,6 +51,7 @@ function initializeGoalChart(goaldata, chartOrder) {
     setTimeout(function () {
         fadeDivs('slow', 1);
     }, 1000);
+
 
 
     function addForecasts(dataView) {
@@ -460,7 +454,7 @@ function initializeGoalChart(goaldata, chartOrder) {
         </div>\
         <div class="demo-graphs mdl-shadow--2dp mdl-color--white mdl-cell mdl-cell--12-col" id=wrapper2 style="display:inline-block; height: 64px;">\
             ' + button(goal.buttons[0], 'left') + '\
-            <div class="demo-graphs mdl-cell mdl-cell--7-col ' + goal.controldiv + '" id="' + goal.controldiv + '" style="display:inline-block;margin:0 8px 0 8px;padding:0 0 0 0;width:calc(100% - 160px);"></div>\
+            <div class="demo-graphs mdl-cell mdl-cell--7-col ' + goal.controldiv + '" id="' + goal.controldiv + '" style="display:inline-block;margin:0 8px 0 8px;padding:0 0 0 0;width:calc(100% - 160px); "></div>\
             ' + button(goal.buttons[1], 'right') + '\
         </div>'
     }
@@ -516,8 +510,8 @@ function initializeGoalChart(goaldata, chartOrder) {
 
 
     function fadeDivs(speed, opacity) {
-        $('#goalDiv').fadeTo(speed, opacity);
         $('#controlgoalDiv').fadeTo(speed, opacity);
+        $('#goalDiv').fadeTo(speed, opacity);
     }
 
 

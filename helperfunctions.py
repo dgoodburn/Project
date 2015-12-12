@@ -78,18 +78,28 @@ def cprof(func, *args, **kwargs):
 
     return func_wrapper
 
+
 import time
 
 timeiteration = 0
-start = time.time()
-
-def timer():
 
 
-    global start
+def timerfunc(func, *args):
+
     global timeiteration
 
-    new = time.time()
+    start = time.time()
     timeiteration += 1
-    print timeiteration, new - start
-    start = new
+
+    returnvalue = func(*args)
+
+    print timeiteration, func.__name__, "%.5f" % (time.time() - start) + " sec"
+
+    return returnvalue
+
+
+def timermultifunc(func, *args):
+
+    for i in func:
+        timerfunc(i, *args)
+
