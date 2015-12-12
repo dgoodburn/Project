@@ -15,6 +15,7 @@ JOYNT is a Personal Finance Dashboard to give people visibility into accounts in
 To install from terminal:
 
 Use Python2, not Python3, since google-visualization-python only works with 2.
+You will also need MySQL if you do not already have it. You can follow the tutorial at http://zetcode.com/db/mysqlpython/
 
 $ virtualenv Joynt # ("pip install virtualenv" if you don't already have it)  
 $ source Joynt/bin/activate  
