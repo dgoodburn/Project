@@ -131,11 +131,11 @@ function loadBalancesPage() {
 
         $.getJSON($SCRIPT_ROOT + '/NIFX', {}, function (data) { initializeNIFXChart(data.NIFXdata, 1); }),
 
-        $.getJSON($SCRIPT_ROOT + '/balances', {}, function (data) { initializeBalanceChart(data.balanceData, data.currentBalanceData, 0); }),
+        $.getJSON($SCRIPT_ROOT + '/balances', {}, function (data) { initializeBalanceChart(data.balanceData, data.currentBalanceData, 0); })
 
-        $.getJSON($SCRIPT_ROOT + '/balancebyaccount', {}, function (data) { initializebalancesbyaccountChart(data.balancedatabyaccount, 2); })
 
-    ).done(function() { $('.demo-graphs').css("opacity", 1); });
+
+    ).done(function() { $.getJSON($SCRIPT_ROOT + '/balancebyaccount', {}, function (data) { initializebalancesbyaccountChart(data.balancedatabyaccount, 2); }); $('.demo-graphs').css("opacity", 1); });
 
 }
 

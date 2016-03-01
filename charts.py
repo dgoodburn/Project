@@ -177,6 +177,7 @@ def sumstockPricesData():
     df4 = df4.reset_index()
     df4.columns = ['Stock','Price']
     df = df.fillna(0)
+    df4 = df4.fillna(0)
 
     return returnTable(df), returnTable(df4)
 

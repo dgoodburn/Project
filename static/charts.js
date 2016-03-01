@@ -313,6 +313,32 @@ var chart = function (div, data, divcol, firstTitle, secondTitle, sumcol, valSta
     };
     */
 
+    this.addSumRow = function (dataTable, cols, title) {
+
+        dataTable.addRow();
+
+        columns = dataTable.getNumberOfColumns();
+        rows = dataTable.getNumberOfRows() - 1;
+
+        for (var i = 0; i < columns; i++) {
+            if (cols.indexOf(i) === -1) {
+                dataTable.setValue(rows, i, title)
+            }
+        }
+
+        cols.forEach(function(i) {
+            var c = 0.0;
+            for (var j = 0; j < rows; j++) {
+                c += dataTable.getValue(j, i);
+            }
+
+            dataTable.setValue(rows, i, c)
+
+        });
+
+        return dataTable
+    };
+
     this.createCardDivHTML = function () {
         return '\
             <div class="demo-graphs mdl-cell mdl-cell--' + this.divcol + '-col mdl-color--white mdl-shadow--2dp" style="padding:0px; border-radius: 2px;" id=' + this.cardDiv + '>\

@@ -152,13 +152,13 @@ def sqlcurrentbalancebyaccount():
       B1.owner       AS owner,
       B1.Rate        AS FXRate,
       B1.AccountName AS AccountName,
-      B1.USDAmount   AS balance,
-      B2.USDAmount   AS priorbalance
+      B2.USDAmount   AS balance,
+      B1.USDAmount   AS priorbalance
     FROM balances B1
       INNER JOIN balances B2
         ON date(B1.transdate) = date(DATE_SUB(B2.transdate, INTERVAL 1 MONTH)) AND B1.AccountName = B2.AccountName
     WHERE date(B1.transdate) = current_date OR date(B1.transdate) = date(DATE_SUB(NOW(), INTERVAL 1 MONTH))
-    ORDER BY B1.USDAmount DESC
+    ORDER BY B2.USDAmount DESC
     '''
 
 
@@ -188,7 +188,7 @@ def sqlindtransactions():
     FROM transactions
       INNER JOIN bankaccounts ON transactions.accountname = bankaccounts.MintAccountName
       INNER JOIN fxrates ON transactions.transdate = fxrates.FXDate
-    where "Account Type" != "Investment" %s
+    where bankaccounts.AccountType2 != "Investment" AND transactions.transdate <= CURRENT_DATE() %s
     ORDER BY transactions.transdate
       DESC
     LIMIT %s offset %s
@@ -286,6 +286,7 @@ def sqlstockgain():
       INNER JOIN fxrates ON fxrates.FXDate = transactions.transdate
     WHERE transactions.category = 'gain/loss'
     '''
+
 
 def sqlstocksprices():
     return '''
@@ -536,16 +537,15 @@ def sqlSumSpendTable():
 
     SELECT
       T1.monthdate                 AS transdate,
-      T1.Owner,
       FX2.Rate,
-      LEAST(T1.Spend, 5500),
-      GREATEST(5500 - T1.Spend, 0) AS Budget,
-      GREATEST(0, T1.Spend - 5500) AS Remaining
+      "Joint" as Owner,
+      LEAST(T1.Spend, 5700),
+      GREATEST(5700 - T1.Spend, 0) AS Budget,
+      GREATEST(0, T1.Spend - 5700) AS Remaining
 
     FROM
       (SELECT
          LAST_DAY(transactions.transdate) AS monthdate,
-         bankaccounts.Owner,
          round(sum(CASE WHEN bankaccounts.Currency = "USD"
            THEN transactions.amount
                    ELSE transactions.amount / FX1.Rate
@@ -555,9 +555,8 @@ def sqlSumSpendTable():
          INNER JOIN bankaccounts ON transactions.accountname = bankaccounts.MintAccountName
          INNER JOIN fxrates AS FX1 ON transactions.transdate = FX1.FXDate
          INNER JOIN categories ON categories.Category = transactions.category
-       WHERE LAST_DAY(transactions.transdate) >= date(DATE_SUB(NOW(), INTERVAL 6 MONTH)) AND categories.Spending AND
-             bankaccounts.JointColumn = "Joint"
-       GROUP BY LAST_DAY(transactions.transdate), bankaccounts.Owner) AS T1
+       WHERE transactions.transdate <= CURRENT_DATE AND LAST_DAY(transactions.transdate) >= date(DATE_SUB(NOW(), INTERVAL 18 MONTH)) AND categories.Spending
+       GROUP BY LAST_DAY(transactions.transdate)) AS T1
       INNER JOIN fxrates AS FX2 ON monthdate = date(FX2.FXDate)
     '''
     # AND bankaccounts.JointColumn = "Joint"
@@ -571,7 +570,7 @@ def sqlowners():
     '''
 
 
-def sqlGoalChart():
+def sqlGoalChart2():
     return '''
 
     SELECT
@@ -593,4 +592,35 @@ def sqlGoalChart():
     FROM goal
       INNER JOIN fxrates ON date(goal.transdate) = date(fxrates.FXDate)
       where date(goal.transdate) <= current_date
+    '''
+
+
+def sqlGoalChart():
+    return '''
+
+    SELECT
+      "Actual" AS AccountName,
+      T2.transdate,
+      "Joint"           AS owner,
+      round(sum(CASE WHEN T4.Currency = "USD"
+        THEN T1.amount
+          ELSE T1.amount / T3.Rate
+          END),0) AS balance,
+      1                 AS FXRate
+    FROM datestable T2
+      INNER JOIN transactions T1 ON T2.transdate >= T1.transdate
+      INNER JOIN fxrates T3 ON T1.transdate = T3.FXDate
+      INNER JOIN bankaccounts T4 ON T1.accountname = T4.MintAccountName
+    WHERE T1.category != "gain/loss" AND T2.transdate = LAST_DAY(T2.transdate) AND T2.transdate <= CURRENT_DATE
+    GROUP BY T2.transdate
+    UNION ALL
+    SELECT
+      "Goal"            AS AccountName,
+      date(goal.transdate),
+      "Joint"           AS owner,
+      round(goal.nofxamount,0) AS balance,
+      1                 AS FXRate
+    FROM goal
+    WHERE date(goal.transdate) <= current_date
+    ;
     '''

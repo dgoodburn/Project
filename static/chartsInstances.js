@@ -594,6 +594,10 @@ function initializeNIFXChart(NIFXdata, chartOrder) {
         ['series.5.targetAxisIndex', 1]
     ]);
 
+    NIFX.controlWrapper.setState({range: {start: new Date(2014, 1, 1), end: new Date()}});
+
+
+
     GLOBALS.grid.append(NIFX.htmldiv);
 
     NIFX.dataTable = NIFX.initialDraw(NIFX.data);
@@ -748,6 +752,7 @@ function initializebalancesbyaccountChart(balancedatabyaccount, chartOrder) {
         balancesTable.dataOwnerJoin = balancesTable.dataJoin(balancesTable.dataTable);
         balancesTable.dataView = balancesTable.dataOwnerGroup(balancesTable.dataOwnerJoin);
         balancesTable.dataView.removeColumns(0, 2);
+        this.dataView = this.addSumRow(this.dataView, [1, 2], 'Total');
 
         GLOBALS.formatdecimals.format(balancesTable.dataView, 1);
         GLOBALS.formatdecimals.format(balancesTable.dataView, 2);

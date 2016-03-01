@@ -68,8 +68,6 @@ function initializeGoalChart(goaldata, chartOrder) {
 
         dataView = addNextYearDates(dataView);
 
-
-
         dataView = addFutureDates(dataView);
         dataView = addRetirementDates(dataView);
         dataView = addIntervals(dataView);
@@ -135,7 +133,7 @@ function initializeGoalChart(goaldata, chartOrder) {
 
             goal.futureMonthlyGoal = getMonthlyGoalAmount(dataView);
 
-            var numberOfDates = (goal.inputs.ageOfRetirement.value - goal.inputs.currentAge.value - 1) * 12 - 1;
+            var numberOfDates = (goal.inputs.ageOfRetirement.value - goal.inputs.currentAge.value - 1) * 12;
 
             dataView = addFutureValues(1, numberOfDates);
 
@@ -145,7 +143,7 @@ function initializeGoalChart(goaldata, chartOrder) {
 
         function addRetirementDates(dataView) {
 
-            var numberOfDates = (goal.inputs.ageOfDeath.value - goal.inputs.ageOfRetirement.value) * 12 - 1;
+            var numberOfDates = (goal.inputs.ageOfDeath.value - goal.inputs.ageOfRetirement.value) * 12;
 
             dataView = addFutureValues(2, numberOfDates);
 
@@ -183,16 +181,17 @@ function initializeGoalChart(goaldata, chartOrder) {
 
             var min = 0;
             var max = 0;
+            var minMax = [[0,0], [0, 0]];
 
             var continuousExpectedReturn = Math.log(1 + goal.inputs.rateOfReturn.value) - Math.pow(goal.inputs.stdev.value * goal.inputs.rateOfReturn.value, 2) / 2;
             var continuousStandardDeviation = Math.sqrt(Math.log(Math.pow(goal.inputs.stdev.value * goal.inputs.rateOfReturn.value, 2) / Math.pow(1 + goal.inputs.rateOfReturn.value, 2) + 1));
             var ZScore = calc_q(goal.inputs.certainty.value);
 
             var currentDate = new Date();
-            var numberOfDatesToCurrent = ( currentDate.getFullYear() - 2006 + 1 ) * 12 + currentDate.getMonth() - 4;
-            var numberofrows = dataView.getNumberOfRows() - numberOfDatesToCurrent;
+            var numberOfDatesToCurrent = ( currentDate.getFullYear() - 2006 + 1 ) * 12 + 0;
+            //var numberofrows = dataView.getNumberOfRows() - numberOfDatesToCurrent;
 
-            var a = continuousStandardDeviation * ZScore;
+            var marginOfError = continuousStandardDeviation * ZScore;
 
             var baseValue = dataView.getValue(numberOfDatesToCurrent, 1);
 
@@ -203,12 +202,12 @@ function initializeGoalChart(goaldata, chartOrder) {
 
             var datesToRetirement = numberOfDatesToCurrent + (goal.inputs.ageOfRetirement.value - goal.inputs.currentAge.value - 1) * 12 - 1;
 
+            var saveAmount = goal.inputs.futureMonthlySave.value;
+
             for (var i = numberOfDatesToCurrent + 1; i < datesToRetirement; i++) {
 
                 var j = i - numberOfDatesToCurrent;
-                var b = a / Math.pow((j) / 12, 0.5);
-
-                var saveAmount = goal.inputs.futureMonthlySave.value;
+                var b = marginOfError / Math.pow((j) / 12, 0.5);
 
                 var maxFunction = Math.pow(Math.exp(continuousExpectedReturn + b), j / 12);
                 var minFunction = Math.pow(Math.exp(continuousExpectedReturn - b), j / 12);
@@ -221,7 +220,6 @@ function initializeGoalChart(goaldata, chartOrder) {
 
             }
 
-            var k = 0;
             var max2 = 0;
             var min2 = 0;
 
@@ -229,24 +227,46 @@ function initializeGoalChart(goaldata, chartOrder) {
 
             for (var i = datesToRetirement; i < dataView.getNumberOfRows(); i++) {
 
-                k++;
-                var l = a / Math.pow((k) / 12, 0.5);
-                var maxFunction2 = Math.pow(Math.exp(continuousExpectedReturn + l), k / 12);
-                var minFunction2 = Math.pow(Math.exp(continuousExpectedReturn - l), k / 12);
-
-                max2 += maxFunction2 * (saveAmount + goal.inputs.monthlyRetirementExpenses.value);
-                min2 += minFunction2 * (saveAmount + goal.inputs.monthlyRetirementExpenses.value);
-
+                var k = i - datesToRetirement;
                 var j = i - numberOfDatesToCurrent;
-                var b = a / Math.pow((j) / 12, 0.5);
 
+                var b = marginOfError / Math.pow((j) / 12, 0.5);
+                var l = marginOfError / Math.pow((k) / 12, 0.5);
+
+                var maxFunction2 = Math.pow(Math.exp(continuousExpectedReturn + l), k / 12);
+
+                var maxFunction2 = Math.pow(Math.exp(continuousExpectedReturn + l), k / 12);
+                max2 += maxFunction2 * (saveAmount + goal.inputs.monthlyRetirementExpenses.value);
                 var maxFunction = Math.pow(Math.exp(continuousExpectedReturn + b), j / 12);
-                var minFunction = Math.pow(Math.exp(continuousExpectedReturn - b), j / 12);
-
                 max += maxFunction * saveAmount;
-                min += minFunction * saveAmount;
-
                 dataView.setValue(i, 2, max + maxFunction * baseValue - max2);
+
+                function setNextValue(minMax, i, datesToRetirement, saveAmount) {
+
+                    var k = [i - datesToRetirement, i - numberOfDatesToCurrent];
+
+                    var b = [];
+                    b[1] = marginOfError / Math.pow((k[1]) / 12, 0.5);
+                    b[0] = marginOfError / Math.pow((k[0]) / 12, 0.5);
+
+                    for (var g=0; g<2; g++) {
+                        for (var h = 0; h < 2; h++) {
+                            minMax[g][h] += varFunction(continuousExpectedReturn, g*2-1, b[g], k[g], saveAmount, h);
+                        }
+                    }
+
+                    dataView.setValue(i, 2, max + maxFunction * baseValue - max2);
+                    dataView.setValue(i, 3, min + minFunction * baseValue - min2);
+
+                    function varFunction(continuousExpectedReturn, minMaxMultiplier, l, k) {
+                        return Math.pow(Math.exp(continuousExpectedReturn + minMaxMultiplier * l), k / 12);
+                    }
+                }
+
+                var minFunction2 = Math.pow(Math.exp(continuousExpectedReturn - l), k / 12);
+                min2 += minFunction2 * (saveAmount + goal.inputs.monthlyRetirementExpenses.value);
+                var minFunction = Math.pow(Math.exp(continuousExpectedReturn - b), j / 12);
+                min += minFunction * saveAmount;
                 dataView.setValue(i, 3, min + minFunction * baseValue - min2);
 
             }
@@ -379,7 +399,7 @@ function initializeGoalChart(goaldata, chartOrder) {
         goal.inputs.stdev = {"name": "Standard Deviation", "value": 0.20};
 
         goal.inputs2.next12Goal = [2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000];
-        goal.inputs2.next12Save = [1500, 1500, 1500, 1500, 1500, 1500, 1500, 1500, 1500, 1500, 1500, 1500];
+        goal.inputs2.next12Save = [4000, 5000, 10000, 2000, 2000, 2000, 2000, 2000, -8000, 2000, 2000, 2000];
 
         // to incorporate in the future
         // goal.inputs.rateOfInlation = { "name" : "Inflation Rate", "value" : 0.02 };
@@ -392,8 +412,11 @@ function initializeGoalChart(goaldata, chartOrder) {
 
     function setControlOptions() {
 
+        goal.oneYearFromNow = new Date();
+        goal.oneYearFromNow.setYear(goal.oneYearFromNow.getYear() + 1901);
+
         goal.controlWrapper.setState({range: {start: new Date(2006, 1, 31)}});
-        goal.controlWrapper.setState({range: {end: new Date(2017, 12, 31)}});
+        goal.controlWrapper.setState({range: {end: goal.oneYearFromNow}});
         goal.controlWrapper.setOption('ui.chartOptions.chartArea.width', '96%');
         goal.controlWrapper.setOption('ui.chartOptions.chartArea.left', '2%');
         goal.controlWrapper.setOption('ui.chartOptions.series.1.type', 'line');
@@ -403,7 +426,7 @@ function initializeGoalChart(goaldata, chartOrder) {
         goal.controlWrapper.setOption('ui.chartOptions.colors', [GLOBALS.chartcolours[0], 'red', GLOBALS.chartcolours[3]]);
         goal.controlWrapper.setOption('ui.chartOptions.areaOpacity', 0.3);
         goal.controlWrapper.setOption('ui.chartType', 'ComboChart');
-        goal.controlWrapper.setOption('ui.chartOptions.seriesType', 'line');
+        goal.controlWrapper.setOption('ui.chartOptions.seriesType', 'area');
         goal.controlWrapper.setOption('ui.chartOptions.intervals.color', '#99cbe2');
 
     }
@@ -411,13 +434,13 @@ function initializeGoalChart(goaldata, chartOrder) {
 
     function setChartOptions() {
 
-        //goal.chartWrapper.setChartType('AreaChart');
-        goal.chartWrapper.setChartType('LineChart');
+        goal.chartWrapper.setChartType('AreaChart');
+        //goal.chartWrapper.setChartType('LineChart');
         goal.chartWrapper.setContainerId(goal.chartdiv);
 
         goal.setMultipleOptions([
             ['lineWidth', 2],
-            ['areaOpacity', 1],
+            ['areaOpacity',.2],
             //['tooltip.trigger', 'none'],
             ['hAxis.gridlines.count', 8],
             ['hAxis.gridlines.color', 'transparent'],
@@ -521,7 +544,7 @@ function initializeGoalChart(goaldata, chartOrder) {
 
             if ( e.currentTarget.innerText === goal.buttons[0] ) {
                 goal.controlWrapper.setState({range: {start: new Date(2006, 1, 31)}});
-                goal.controlWrapper.setState({range: {end: new Date(2017, 12, 31)}});
+                goal.controlWrapper.setState({range: {end: goal.oneYearFromNow}});
             } else if ( e.currentTarget.innerText === goal.buttons[1] ) {
                 goal.controlWrapper.setState({range: {start: new Date(2006, 1, 31)}});
                 goal.controlWrapper.setState({range: {end: new Date(2090, 12, 31)}});
