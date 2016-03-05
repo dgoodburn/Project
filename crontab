@@ -1,0 +1,2 @@
+*/1 * * * * cd /Users/dangoodburn/Documents/Dan/MoneyProject
+*/1 * * * * python main.py

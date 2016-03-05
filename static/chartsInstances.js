@@ -703,6 +703,8 @@ function initializeMonthlySpend(spendingdata, chartOrder) {
     monthlySpend.chartWrapper.setOption('colors', [GLOBALS.chartcolours[3]]);
     monthlySpend.controlWrapper.setOption('ui.chartOptions.colors', [GLOBALS.chartcolours[3]]);
 
+    monthlySpend.controlWrapper.setState({range: {start: new Date(2014, 1, 1), end: new Date()}});
+
     GLOBALS.grid.append(monthlySpend.htmldiv);
     monthlySpend.dataTable = monthlySpend.initialDraw(monthlySpend.data);
     monthlySpend.redraw();
@@ -723,6 +725,8 @@ function initializeNetIncomeChart(netincomedata, chartOrder) {
     NI.chartWrapper.setOption('dataOpacity', 0.8);
     NI.chartWrapper.setOption('colors', [GLOBALS.chartcolours[3]]);
     NI.controlWrapper.setOption('ui.chartOptions.colors', [GLOBALS.chartcolours[3]]);
+
+    NI.controlWrapper.setState({range: {start: new Date(2014, 1, 1), end: new Date()}});
 
     GLOBALS.grid.append(NI.htmldiv);
     NI.dataTable = NI.initialDraw(NI.data);
