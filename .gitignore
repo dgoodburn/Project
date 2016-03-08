@@ -5,7 +5,6 @@ old/
 .idea/
 test/
 test.py
-gviz_api.py-1.8.2-py2.7.egg
 manage.py
 
 
