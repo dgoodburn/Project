@@ -423,7 +423,7 @@ def sqlStockTable():
        FROM transactions
          INNER JOIN bankaccounts ON transactions.accountname = bankaccounts.MintAccountName
          INNER JOIN fxrates FX3 ON FX3.FXDate = transactions.transdate
-       WHERE transactions.category = 'gain/loss' AND date(transactions.transdate) <= current_date
+       WHERE transactions.category = 'gain/loss' AND date(transactions.transdate) <= CAST(CONVERT_TZ(current_date(), 'UTC', 'US/Pacific') AS DATE)
        GROUP BY bankaccounts.Owner, transactions.description) AS T1
       INNER JOIN
       (SELECT
@@ -446,7 +446,7 @@ def sqlStockTable():
        FROM stockprices
          INNER JOIN fxrates FX1 ON (FX1.FXDate) = (stockprices.transdate)
          INNER JOIN bankaccounts ON stockprices.accountname = bankaccounts.MintAccountName
-       WHERE symbol != 'MoneyMarket' AND date(stockprices.transdate) = current_date - 1
+       WHERE symbol != 'MoneyMarket' AND date(stockprices.transdate) = CAST(CONVERT_TZ(current_date(), 'UTC', 'US/Pacific') AS DATE) - 1
        GROUP BY bankaccounts.Owner, stockprices.symbol) AS T2
         ON T1.symbol = T2.symbol AND T1.owner = T2.owner
       INNER JOIN fxrates FX2 on T2.transdate = FX2.FXDate
@@ -598,7 +598,7 @@ def sqlSumSpendTable():
          INNER JOIN bankaccounts ON transactions.accountname = bankaccounts.MintAccountName
          INNER JOIN fxrates AS FX1 ON transactions.transdate = FX1.FXDate
          INNER JOIN categories ON categories.Category = transactions.category
-       WHERE transactions.transdate <= CURRENT_DATE AND LAST_DAY(transactions.transdate) >= date(DATE_SUB(NOW(), INTERVAL 18 MONTH)) AND categories.Spending
+       WHERE transactions.transdate <= CAST(CONVERT_TZ(current_date(), 'UTC', 'US/Pacific') AS DATE) AND LAST_DAY(transactions.transdate) >= date(DATE_SUB(NOW(), INTERVAL 18 MONTH)) AND categories.Spending
        GROUP BY LAST_DAY(transactions.transdate)) AS T1
       INNER JOIN fxrates AS FX2 ON monthdate = date(FX2.FXDate)
     '''
