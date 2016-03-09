@@ -18,7 +18,8 @@ def create_database():
 @app.route('/')
 def homepage():
 
-    return render_template("index.html")
+     #return str(3)
+     return render_template("index.html")
 
 """
 @app.route('/owners/')
@@ -34,6 +35,7 @@ def ownerspage():
     return jsonify(owners=owners)
 
 """
+
 @app.route('/owners/')
 def ownerspage():
 
@@ -161,4 +163,4 @@ def accrualpage():
 
 if __name__ == '__main__':
     app.debug = True
-    app.run(host='0.0.0.0', port=5000)
+    app.run()
