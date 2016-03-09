@@ -138,7 +138,7 @@ def sqlcurrentbalance():
       balances.Rate           AS FXRate,
       sum(balances.USDAmount) AS balance
     FROM balances
-    WHERE balances.transdate = current_date OR balances.transdate = date(DATE_SUB(NOW(), INTERVAL 1 MONTH))
+    WHERE balances.transdate = CAST(CONVERT_TZ(current_date(), 'UTC', 'US/Pacific') AS DATE) OR balances.transdate = date(DATE_SUB(NOW(), INTERVAL 1 MONTH))
     GROUP BY balances.transdate, balances.owner, balances.Rate
     ORDER BY balances.transdate
     DESC
@@ -453,7 +453,7 @@ def sqlStockTable():
     '''
 
 
-def sqlSumStockTable():
+def sqlSumStockTable2():
     return '''
 
     SELECT
@@ -461,7 +461,7 @@ def sqlSumStockTable():
       T2.owner,
       FX2.Rate,
       T2.DaysGain  AS "Day's Gain",
-      T1.TotalGain AS "Total Gain/Loss"
+      T1.TotalGain AS 'Total Gain/Loss'
     FROM
       (SELECT
          current_date as transdate,
@@ -490,6 +490,49 @@ def sqlSumStockTable():
         ON T1.owner = T2.owner
         INNER JOIN fxrates FX2 on t1.transdate = FX2.FXDate
     '''
+
+def sqlSumStockTable():
+    return '''
+SELECT
+      S1.transdate,
+      S1.owner,
+      FX2.Rate,
+      S1.DaysGain  AS 'Day''s Gain',
+      S1.TotalGain AS 'Total Gain/Loss'
+    FROM (
+SELECT
+      T1.transdate,
+      T2.owner,
+      T2.DaysGain,
+      T1.TotalGain
+    FROM
+      (SELECT
+         CAST(CONVERT_TZ(current_date(), 'UTC', 'US/Pacific') AS DATE) as transdate,
+         bankaccounts.Owner AS owner,
+         round(sum(CASE WHEN bankaccounts.Currency = "USD"
+           THEN transactions.amount
+                   ELSE transactions.amount / FX1.Rate
+                   END), 2) AS TotalGain
+       FROM money.transactions
+         INNER JOIN money.bankaccounts ON transactions.accountname = bankaccounts.MintAccountName
+         INNER JOIN money.fxrates FX1 ON FX1.FXDate = transactions.transdate
+       WHERE transactions.category = 'gain/loss' AND date(transactions.transdate) <= current_date
+       GROUP BY bankaccounts.Owner) AS T1
+      INNER JOIN
+      (SELECT
+         bankaccounts.Owner   AS owner,
+         sum(round((CASE WHEN bankaccounts.Currency = "USD"
+           THEN (stockprices.price - stockprices.prevprice) * stockprices.numshares
+                    ELSE (stockprices.price - stockprices.prevprice) * stockprices.numshares / fxrates.Rate
+                    END), 2)) AS DaysGain
+       FROM money.stockprices
+         INNER JOIN money.fxrates ON (fxrates.FXDate) = (stockprices.transdate)
+         INNER JOIN money.bankaccounts ON stockprices.accountname = bankaccounts.MintAccountName
+       WHERE symbol != 'MoneyMarket' AND stockprices.transdate = current_date - 3
+       GROUP BY bankaccounts.Owner) AS T2
+        ON T1.owner = T2.owner) AS S1
+        INNER JOIN money.fxrates FX2 ON S1.transdate = FX2.FXDate;
+        '''
 
 
 def sqlSumStockData():

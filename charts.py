@@ -154,6 +154,7 @@ def sumstockdata():
 
     a = sqlqueries.sqlSumStockTable()
     df = pd.read_sql(a, engine, parse_dates='transdate')
+    print df.head()
 
     return returnTable(df)
 
@@ -178,6 +179,8 @@ def sumstockPricesData():
     df4.columns = ['Stock','Price']
     df = df.fillna(0)
     df4 = df4.fillna(0)
+    print df.head()
+    print df4.head()
 
     return returnTable(df), returnTable(df4)
 
