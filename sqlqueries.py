@@ -124,7 +124,7 @@ def sqlmonthlybalances():
     FROM balances
       JOIN bankaccounts ON balances.MintAccountName = bankaccounts.MintAccountName
     WHERE date(balances.transdate) = LAST_DAY(balances.transdate) OR
-        date(balances.transdate) = current_date
+        date(balances.transdate) = CAST(CONVERT_TZ(current_date(), 'UTC', 'US/Pacific') AS DATE)
     GROUP BY balances.owner, bankaccounts.AccountType, date(balances.transdate), balances.Rate
     '''
 
@@ -157,7 +157,7 @@ def sqlcurrentbalancebyaccount():
     FROM balances B1
       INNER JOIN balances B2
         ON date(B1.transdate) = date(DATE_SUB(B2.transdate, INTERVAL 1 MONTH)) AND B1.AccountName = B2.AccountName
-    WHERE date(B1.transdate) = current_date OR date(B1.transdate) = date(DATE_SUB(NOW(), INTERVAL 1 MONTH))
+    WHERE date(B1.transdate) = CAST(CONVERT_TZ(current_date(), 'UTC', 'US/Pacific') AS DATE) OR date(B1.transdate) = date(DATE_SUB(NOW(), INTERVAL 1 MONTH))
     ORDER BY B2.USDAmount DESC
     '''
 
@@ -328,7 +328,7 @@ def FXquery():
        FROM datestable CROSS JOIN bankaccounts
          INNER JOIN fxrates ON datestable.transdate = fxrates.FXDate
        WHERE ((datestable.transdate) = LAST_DAY(datestable.transdate) OR
-              (datestable.transdate) = current_date)) AS T2
+              (datestable.transdate) = CAST(CONVERT_TZ(current_date(), 'UTC', 'US/Pacific') AS DATE))) AS T2
       LEFT JOIN
       (SELECT
          LAST_DAY(transactions.transdate) AS Date,
