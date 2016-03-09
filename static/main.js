@@ -50,7 +50,7 @@ function loadHomePage() {
 
     return $.when(
 
-        $.getJSON($SCRIPT_ROOT + '/stocks', {}, function (data) { console.log(data); initializeStockChart(data.sumStockTableData, data.sumstocksPricesData[0], data.sumstocksPricesData[1], 3);}),
+        $.getJSON($SCRIPT_ROOT + '/stocks', {}, function (data) { initializeStockChart(data.sumStockTableData, data.sumstocksPricesData[0], data.sumstocksPricesData[1], 3);}),
 
         $.getJSON($SCRIPT_ROOT + '/balances', {}, function (data) { initializeBalanceChart(data.balanceData, data.currentBalanceData, 0); }),
 
