@@ -19,8 +19,8 @@ import time
 database = instance.getDatabase()
 engine = create_engine(database)
 
-demo = False  # turns on demo transactions
-mintacct = True  # turns on mint account download
+demo = True  # turns on demo transactions
+mintacct = False  # turns on mint account download
 pd.options.mode.chained_assignment = None  # turns off warning for chained indexing
 
 

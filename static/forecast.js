@@ -391,7 +391,7 @@ function initializeGoalChart(goaldata, chartOrder) {
         goal.inputs.futureMonthlySave = {"name": "Future Monthly Savings", "value": 2000};
         goal.inputs.monthlyRetirementExpenses = {"name": "Monthly Expenses in Retirement", "value": 12000};
 
-        goal.inputs.currentAge = {"name": "Current Age", "value": 30};
+        goal.inputs.currentAge = {"name": "Current Age", "value": 31};
         goal.inputs.ageOfRetirement = {"name": "Age of Retirement", "value": 65};
         goal.inputs.ageOfDeath = {"name": "Age of Death", "value": 95};
 

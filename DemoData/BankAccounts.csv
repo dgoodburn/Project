@@ -1,20 +1,20 @@
-ID,AccountName,MintAccountName,AccountType,Currency,Owner,JointColumn
-1,Cash,Cash,Cash,USD,Jack,Jack
-2,"US SAVINGS","US SAVINGS",Savings,USD,Jack,Jack
-3,"US CREDIT CARD JOINT","US CREDIT CARD JOINT","Credit Card",USD,Jill,Jill
-4,"US CREDIT CARD","US CREDIT CARD","Credit Card",USD,Jack,Jack
-5,"US CHECKING","US CHECKING",Chequing,USD,Jack,Jack
-8,"CAD CHECKING","CAD CHECKING",Chequing,CAD,Jack,Jack
-11,"CAD RRSP","CAD RRSP",Investment,CAD,Jack,Jack
-12,"CAD SAVINGS","CAD SAVINGS",Savings,CAD,Jack,Jack
-13,"CAD TFSA","CAD TFSA",Investment,CAD,Jack,Jack
-15,"CAD CREDIT CARD","CAD CREDIT CARD","Credit Card",CAD,Jack,Jack
-16,"USD INVESTMENT","USD INVESTMENT",Investment,USD,Jack,Jack
-17,"CAD INVESTMENT","CAD INVESTMENT",Investment,CAD,Jack,Jack
-18,401K,401K,Investment,USD,Jack,Jack
-19,"US CHECKING 2","US CHECKING 2",Chequing,USD,Jill,Jill
-20,"US CREDIT CARD 2","US CREDIT CARD 2","Credit Card",USD,Jill,Jill
-21,"US INVESTMENT 2","US INVESTMENT 2",Investment,USD,Jill,Jill
-24,"US CHECKING JOINT","US CHECKING JOINT",Chequing,USD,Jill,Jill
-25,"US CHECKING 2","US CHECKING 2",Chequing,USD,Jill,Jill
-26,"US CREDIT CARD 2","US CREDIT CARD 2","Credit Card",USD,Jill,Jill
+ID,AccountName,MintAccountName,AccountType,Currency,Owner,JointColumn,AccountType2
+1,Cash,Cash,Cash,USD,Jack,Jack,Cash
+2,"US SAVINGS","US SAVINGS",Savings,USD,Jack,Jack,Savings
+3,"US CREDIT CARD JOINT","US CREDIT CARD JOINT",Cash,USD,Jill,Jill,Cash
+4,"US CREDIT CARD","US CREDIT CARD",Cash,USD,Jack,Jack,Cash
+5,"US CHECKING","US CHECKING",Cash,USD,Jack,Jack,Cash
+8,"CAD CHECKING","CAD CHECKING",Cash,CAD,Jack,Jack,Cash
+11,"CAD RRSP","CAD RRSP",Savings,CAD,Jack,Jack,Savings
+12,"CAD SAVINGS","CAD SAVINGS",Savings,CAD,Jack,Jack,Savings
+13,"CAD TFSA","CAD TFSA",Savings,CAD,Jack,Jack,Savings
+15,"CAD CREDIT CARD","CAD CREDIT CARD",Cash,CAD,Jack,Jack,Cash
+16,"USD INVESTMENT","USD INVESTMENT",Savings,USD,Jack,Jack,Investment
+17,"CAD INVESTMENT","CAD INVESTMENT",Savings,CAD,Jack,Jack,Investment
+18,401K,401K,Savings,USD,Jack,Jack,Investment
+19,"US CHECKING 2","US CHECKING 2",Cash,USD,Jill,Jill,Cash
+20,"US CREDIT CARD 2","US CREDIT CARD 2",Cash,USD,Jill,Jill,Cash
+21,"US INVESTMENT 2","US INVESTMENT 2",Savings,USD,Jill,Jill,Investment
+24,"US CHECKING JOINT","US CHECKING JOINT",Cash,USD,Jill,Jill,Cash
+25,"US CHECKING 2","US CHECKING 2",Cash,USD,Jill,Jill,Cash
+26,"US CREDIT CARD 2","US CREDIT CARD 2",Cash,USD,Jill,Jill,Cash

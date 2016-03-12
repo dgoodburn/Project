@@ -35,6 +35,12 @@ $(document).ready(function() {
     $.getJSON($SCRIPT_ROOT + '/owners', {}, function (data) { initializeOwners(data.owners); });
     $('#JointButton').click(JointButtonClick);
     $('#CurrencyButton').click(CurrencyButtonClick);
+
+    $('.mdl-layout__content').prepend('\
+        <div class="demo-graphs mdl-cell mdl-cell--1-col mdl-color--white mdl-shadow--2dp" style="padding:0; border-radius: 2px; height: 59.125px; width: 59.125px; position: absolute; top:0; left:0;bottom:0;right:0;margin:auto; opacity:0;" id=spinner>\
+        <div class="mdl-spinner mdl-js-spinner is-active" style="top: 8.5px; left: 8.5px"></div></div>\
+    ');
+
     loadHomePage();
 
 });
@@ -58,7 +64,7 @@ function loadHomePage() {
 
         $.getJSON($SCRIPT_ROOT + '/currentspending', {}, function (data) { initializeSpendingChart(data.spendingdata, 2); })
 
-    ).done(function() { $('.demo-graphs').css("opacity", 1); });
+    ).done(function() { fadeinPage() });
 
 }
 
@@ -71,7 +77,7 @@ function loadForecastPage() {
 
         $.getJSON($SCRIPT_ROOT + '/goal', {}, function (data) { initializeGoalChart(data.goalData, 3); })
 
-    ).done(function() { $('.demo-graphs').css("opacity", 1); });
+    ).done(function() { fadeinPage() });
 }
 
 
@@ -80,15 +86,18 @@ function loadTransactionsPage() {
 
     clearPage();
 
-    $.getJSON($SCRIPT_ROOT + '/transactions', {limit:10}, function (data) {
+    return $.when(
 
-        indtranstable(data.x , data.y);
+        $.getJSON($SCRIPT_ROOT + '/transactions', {limit:10}, function (data) {
 
-        initiateButtons();
+            indtranstable(data.x , data.y);
 
-        });
+            initiateButtons();
 
-    return false;
+            })
+
+    ).done(function() { fadeinPage() });
+
 
 }
 
@@ -104,7 +113,7 @@ function loadStocksPage() {
 
         $.getJSON($SCRIPT_ROOT + '/stockTable', {}, function (data) { initializeStockTable(data.stockTableData, 2); })
 
-    ).done(function() { $('.demo-graphs').css("opacity", 1); });
+    ).done(function() { fadeinPage() });
 
 }
 
@@ -118,7 +127,7 @@ function loadBudgetPage() {
 
         $.getJSON($SCRIPT_ROOT + '/budget', {}, function (data) { initializeIndBudgetChart(data.budgetData, 1); })
 
-    ).done(function() { $('.demo-graphs').css("opacity", 1); });
+    ).done(function() { fadeinPage() });
 
 }
 
@@ -135,7 +144,7 @@ function loadBalancesPage() {
 
 
 
-    ).done(function() { $.getJSON($SCRIPT_ROOT + '/balancebyaccount', {}, function (data) { initializebalancesbyaccountChart(data.balancedatabyaccount, 2); }); $('.demo-graphs').css("opacity", 1); });
+    ).done(function() { $.getJSON($SCRIPT_ROOT + '/balancebyaccount', {}, function (data) { initializebalancesbyaccountChart(data.balancedatabyaccount, 2); }); fadeinPage(); });
 
 }
 
@@ -149,7 +158,7 @@ function loadSpendingPage() {
 
         $.getJSON($SCRIPT_ROOT + '/netincome', {}, function (data) { initializeNetIncomeChart(data.netincomedata, 1); })
 
-    ).done(function() { $('.demo-graphs').css("opacity", 1); });
+    ).done(function() { fadeinPage() });
 
 }
 

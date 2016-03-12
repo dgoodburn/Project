@@ -3,6 +3,7 @@ import charts
 from sqlalchemy import create_engine
 from initialImport import initialStartup
 import instance
+import helperfunctions
 
 app = Flask(__name__)
 

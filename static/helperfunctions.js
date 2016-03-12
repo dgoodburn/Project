@@ -146,6 +146,14 @@ function clearPage(){
     GLOBALS.charts.forEach(function(value) { $("#"+value[0].chartdiv).length > 0 ? value[0].redraw() : void(0); })
     GLOBALS.charts = [];
     GLOBALS.chartsOrder = [false, false, false, false, false, false, false, false];
+    $('.mdl-grid').css("opacity", 0);
+    $('#spinner').fadeTo('fast', 1);
+}
+
+function fadeinPage(){
+    $('#spinner').fadeTo('fast', 0);
+    $('.mdl-grid').fadeTo('slow', 1);
+    $('.demo-graphs').css("opacity", 1);
 }
 
 

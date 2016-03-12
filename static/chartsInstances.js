@@ -260,7 +260,11 @@ function initializeSpendingChart(spendingdata, chartOrder) {
 
         this.dataOwnerJoin = this.dataJoin(this.dataTable, "Combined");
         this.dataView = this.dataOwnerGroup(this.dataOwnerJoin);
-        this.dataView = this.currencyChange(this.dataView);
+
+        // no CAD rates imported so remove currency change step and delete bank account column
+        //this.dataView = this.currencyChange(this.dataView);
+        this.dataView.removeColumn(1);
+
         this.chartWrapper.setDataTable(this.dataView);
         GLOBALS.formatdate.format(this.dataView, 0);
         this.chartWrapper.draw();
