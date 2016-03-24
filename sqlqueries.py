@@ -405,7 +405,7 @@ def sqlStockTable():
       T2.transdate,
       T2.owner,
       FX2.Rate,
-      t1.symbol AS Symbol,
+      T1.symbol AS Symbol,
       T2.shares,
       T2.LastPrice As "Last Price",
       T2.Change,

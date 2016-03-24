@@ -20,7 +20,7 @@ database = instance.getDatabase()
 engine = create_engine(database)
 
 demo = True  # turns on demo transactions
-mintacct = False  # turns on mint account download
+mintacct = not demo  # turns on mint account download
 pd.options.mode.chained_assignment = None  # turns off warning for chained indexing
 
 
