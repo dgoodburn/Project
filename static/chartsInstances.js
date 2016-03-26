@@ -599,7 +599,8 @@ function initializeNIFXChart(NIFXdata, chartOrder) {
     ]);
 
     var curDate = new Date();
-    NIFX.controlWrapper.setState({range: {start: new Date(2014, 1, 1), end: curDate.setDate(curDate.getDate() + 30)}});
+    curDate = curDate.setDate(curDate.getDate() + 30);
+    NIFX.controlWrapper.setState({range: {start: new Date(2014, 1, 1), end: curDate}});
 
 
 
