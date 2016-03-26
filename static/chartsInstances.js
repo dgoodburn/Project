@@ -598,7 +598,7 @@ function initializeNIFXChart(NIFXdata, chartOrder) {
         ['series.5.targetAxisIndex', 1]
     ]);
 
-    NIFX.controlWrapper.setState({range: {start: new Date(2014, 1, 1), end: new Date() + 30}});
+    NIFX.controlWrapper.setState({range: {start: new Date(2014, 1, 1), end: new Date().setDate(new Date() + 30)}});
 
 
 
