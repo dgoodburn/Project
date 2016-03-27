@@ -601,6 +601,7 @@ function initializeNIFXChart(NIFXdata, chartOrder) {
     var curDate = new Date();
     console.log(curDate);
     curDate = curDate.setDate(curDate.getDate() + 30);
+    curDate = new Date(curDate);
     console.log(curDate);
     NIFX.controlWrapper.setState({range: {start: new Date(2014, 1, 1), end: new Date()}});
 
