@@ -399,7 +399,7 @@ function initializeGoalChart(goaldata, chartOrder) {
         goal.inputs.stdev = {"name": "Standard Deviation", "value": 0.20};
 
         goal.inputs2.next12Goal = [2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000];
-        goal.inputs2.next12Save = [4000, 5000, 10000, 2000, 2000, 2000, 2000, 2000, -8000, 2000, 2000, 2000];
+        goal.inputs2.next12Save = [4000, 2000, 2000, 2000, 2000, 2000, -8000, 2000, 2000, 2000, 2000, 10000];
 
         // to incorporate in the future
         // goal.inputs.rateOfInlation = { "name" : "Inflation Rate", "value" : 0.02 };
