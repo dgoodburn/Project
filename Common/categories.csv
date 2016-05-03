@@ -1,134 +1,134 @@
-Category,Parent,Spending
-Activites,Kids,TRUE
-Advertising,Business Services,TRUE
-Air Travel,Travel,TRUE
-Alcohol & Bars,Food & Dining,TRUE
-Allowance,Kids,TRUE
-Amusement,Entertainment,TRUE
-Arts,Expense,TRUE
-ATM Fee,Fees & Charges,TRUE
-Auto & Transport,Auto & Transport,TRUE
-Auto Insurance,Auto & Transport,TRUE
-Auto Payment,Auto & Transport,TRUE
-Baby Supplies,Kids,TRUE
-Babysitter & Daycare,Kids,TRUE
-Bank Fee,Fees & Charges,TRUE
-Bills & Utilities,Bills & Utilities,TRUE
+Category,Parent,Spending,Budget
+Activites,Kids,TRUE,Other
+Advertising,Business Services,TRUE,Other
+Air Travel,Travel,TRUE,Other
+Alcohol & Bars,Food & Dining,TRUE,Alcohol & Bars
+Allowance,Kids,TRUE,Other
+Amusement,Entertainment,TRUE,Entertainment
+Arts,Expense,TRUE,Other
+ATM Fee,Fees & Charges,TRUE,Other
+Auto & Transport,Auto & Transport,TRUE,Auto & Transport
+Auto Insurance,Auto & Transport,TRUE,Auto & Transport
+Auto Payment,Auto & Transport,TRUE,Auto & Transport
+Baby Supplies,Kids,TRUE,Other
+Babysitter & Daycare,Kids,TRUE,Other
+Bank Fee,Fees & Charges,TRUE,Other
+Bills & Utilities,Bills & Utilities,TRUE,Bills & Utilities
 Bonus,Income,FALSE
-Bonus Interest,Income,TRUE
-Books,Shopping,TRUE
-Books & Supplies,Education,TRUE
-Broker Fee,Home,TRUE
-Business Services,Business Services,TRUE
+Bonus Interest,Income,TRUE,Other
+Books,Shopping,TRUE,Education
+Books & Supplies,Education,TRUE,Education
+Broker Fee,Home,TRUE,Other
+Business Services,Business Services,TRUE,Other
 Buy,Investments,FALSE
-Cash & ATM,MISC,TRUE
-Charity,Gifts & Donations,TRUE
-Check,MISC,TRUE
-Child Support,Kids,TRUE
-Clothing,Shopping,TRUE
-Coffee Shops,Food & Dining,TRUE
-Credit Card Bonus,Income,TRUE
+Cash & ATM,MISC,TRUE,Other
+Charity,Gifts & Donations,TRUE,Gifts
+Check,MISC,TRUE,Other
+Child Support,Kids,TRUE,Other
+Clothing,Shopping,TRUE,Shopping
+Coffee Shops,Food & Dining,TRUE,Dining
+Credit Card Bonus,Income,TRUE,Other
 Credit Card Payment,Transfer,FALSE
-Dentist,Health & Fitness,TRUE
+Dentist,Health & Fitness,TRUE,Health
 Deposit,Investments,FALSE
 Dividends & Cap Gains,Investments,FALSE
-Doctor,Health & Fitness,TRUE
-Dues,Education,TRUE
-Education,Education,TRUE
-Electronics & Software,Shopping,TRUE
-Entertainment,Expense,TRUE
-Expense,Expense,TRUE
-Eyecare,Health & Fitness,TRUE
-Fast Food,Food & Dining,TRUE
-Federal Tax,Taxes,TRUE
-Fee, Investments,TRUE
-Fees & Charges,Fees & Charges,TRUE
-Finance Charge,Fees & Charges,TRUE
-Financial,Financial,TRUE
-Food & Dining,Food & Dining,TRUE
-Furnishings,Home,TRUE
+Doctor,Health & Fitness,TRUE,Health
+Dues,Education,TRUE,Education
+Education,Education,TRUE,Education
+Electronics & Software,Shopping,TRUE,Shopping
+Entertainment,Expense,TRUE,Entertainment
+Expense,Expense,TRUE,Other
+Eyecare,Health & Fitness,TRUE,Health
+Fast Food,Food & Dining,TRUE,Dining
+Federal Tax,Taxes,TRUE,Other
+Fee, Investments,TRUE,Investments
+Fees & Charges,Fees & Charges,TRUE,Other
+Finance Charge,Fees & Charges,TRUE,Other
+Financial,Financial,TRUE,Other
+Food & Dining,Food & Dining,TRUE,Dining
+Furnishings,Home,TRUE,Home
 gain/loss,Investments,FALSE
-Gas & Fuel,Auto & Transport,TRUE
-Gift,Gifts & Donations,TRUE
+Gas & Fuel,Auto & Transport,TRUE,Auto & Transport
+Gift,Gifts & Donations,TRUE,Gifts
 Gift Received,Gifts & Donations,FALSE
-Gifts & Donations,Gifts & Donations,TRUE
-Groceries,Food & Dining,TRUE
-Gym,Health & Fitness,TRUE
-Hair,Personal Care,TRUE
-Health & Fitness,Health & Fitness,TRUE
-Health Insurance,Health & Fitness,TRUE
+Gifts & Donations,Gifts & Donations,TRUE,Gifts
+Groceries,Food & Dining,TRUE,Groceries
+Gym,Health & Fitness,TRUE,Gym
+Hair,Personal Care,TRUE,Personal Care
+Health & Fitness,Health & Fitness,TRUE,Gym
+Health Insurance,Health & Fitness,TRUE,Health
 Hide from Budgets & Trends,Hide from Budgets & Trends,FALSE
-Hobbies,Shopping,TRUE
-Home,Home,TRUE
-Home Improvement,Home,TRUE
-Home Insurance,Home,TRUE
-Home Phone,Bills & Utilities,TRUE
-Home Supplies,Home,TRUE
-Hotel,Travel,TRUE
+Hobbies,Shopping,TRUE,Shopping
+Home,Home,TRUE,Home
+Home Improvement,Home,TRUE,Home
+Home Insurance,Home,TRUE,Home
+Home Phone,Bills & Utilities,TRUE,Bills & Utilities
+Home Supplies,Home,TRUE,Home
+Hotel,Travel,TRUE,Travel
 Income,Income,FALSE
 Inheritance,Income,FALSE
-Interest Expense,Fees & Charges,TRUE
+Interest Expense,Fees & Charges,TRUE,Other
 Interest Income,Investments,FALSE
 Internet,Bills & Utilities,TRUE
-Investment,Income,TRUE
+Investment,Income,TRUE,Investment
 Investments,Investments,FALSE
-Kids,Kids,TRUE
-Late Fee,Fees & Charges,TRUE
-Lawn & Garden,Home,TRUE
-Laundry,Personal Care,TRUE
-Legal,Business Services,TRUE
-Licenses,Auto & Transport,TRUE
-Loan Payment,Transfer,TRUE
-Local Tax,Taxes,TRUE
-MISC,MISC,TRUE
-Misc Expenses,Misc Expenses,TRUE
-Mobile Phone,Bills & Utilities,TRUE
-Mortgage & Rent,Home,TRUE
-Movies & DVDs,Expense,TRUE
-Moving Costs,Home,TRUE
-Music,Expense,TRUE
-Newspaper & Magazines,Expense,TRUE
-Newspapers & Magazines,Entertainment,TRUE
-Office Supplies,Business Services,TRUE
-Parking,Auto & Transport,TRUE
+Kids,Kids,TRUE,Other
+Late Fee,Fees & Charges,TRUE,Other
+Lawn & Garden,Home,TRUE,Home
+Laundry,Personal Care,TRUE,Personal Care
+Legal,Business Services,TRUE,Other
+Licenses,Auto & Transport,TRUE,Auto & Transport
+Loan Payment,Transfer,TRUE,Other
+Local Tax,Taxes,TRUE,Other
+MISC,MISC,TRUE,Other
+Misc Expenses,Misc Expenses,TRUE,Other
+Mobile Phone,Bills & Utilities,TRUE,Bills & Utilities
+Mortgage & Rent,Home,TRUE,Rent
+Movies & DVDs,Expense,TRUE,Entertainment
+Moving Costs,Home,TRUE,Home
+Music,Expense,TRUE,Entertainment
+Newspaper & Magazines,Expense,TRUE,Shopping
+Newspapers & Magazines,Entertainment,TRUE,Shopping
+Office Supplies,Business Services,TRUE,Shopping
+Parking,Auto & Transport,TRUE,Auto & Transport
 Paycheck,Income,FALSE
-Personal Care,Personal Care,TRUE
-Pet Food & Supplies,Pets,TRUE
-Pharmacy,Health & Fitness,TRUE
-Phone,Bills & Utilities,TRUE
-Printing Shipping,Business Services,TRUE
-Property Tax,Taxes,TRUE
-Public Transportation,Auto & Transport,TRUE
+Personal Care,Personal Care,TRUE,Personal Care
+Pet Food & Supplies,Pets,TRUE,Other
+Pharmacy,Health & Fitness,TRUE,Personal Care
+Phone,Bills & Utilities,TRUE,Bills & Utilities
+Printing Shipping,Business Services,TRUE,Other
+Property Tax,Taxes,TRUE,Other
+Public Transportation,Auto & Transport,TRUE,Auto & Transport
 Reimbursable Expense,Business Services,FALSE
 Reimbursement,Income,FALSE
-Rental Car & Taxi,Travel,TRUE
-Rental Income,Income,TRUE
-Restaurants,Food & Dining,TRUE
-Returned Purchase,Income,TRUE
-Sales Tax,Taxes,TRUE
-"Security Deposit",Home,FALSE
+Rental Car & Taxi,Travel,TRUE,Auto & Transport
+Rental Income,Income,TRUE,Other
+Restaurants,Food & Dining,TRUE,Dining
+Returned Purchase,Income,TRUE,Other
+Sales Tax,Taxes,TRUE,Other
+"Security Deposit",Home,FALSE,Home
 Sell,Investments,FALSE
-Service & Parts,Auto & Transport,TRUE
-Service Fee,Fees & Charges,TRUE
-Shipping,Business Services,TRUE
-Shopping,Shopping,TRUE
-Spa & Massage,Personal Care,TRUE
-Sporting Goods,Shopping,TRUE
-Sports,Health & Fitness,TRUE
-State Tax,Taxes,TRUE
-Student Loan,Education,TRUE
+Service & Parts,Auto & Transport,TRUE,Auto & Transport
+Service Fee,Fees & Charges,TRUE,Other
+Shipping,Business Services,TRUE,Other
+Shopping,Shopping,TRUE,Shopping
+Spa & Massage,Personal Care,TRUE,Personal Care
+Sporting Goods,Shopping,TRUE,Shopping
+Sports,Health & Fitness,TRUE,Entertainment
+State Tax,Taxes,TRUE,Other
+Student Loan,Education,TRUE,Education
 Taxes,Taxes,FALSE
-Television,Bills & Utilities,TRUE
-Toys,Kids,TRUE
-Trade Comissions,Fees & Charges,TRUE
+Television,Bills & Utilities,TRUE,Bills & Utilities
+Toys,Kids,TRUE,Other
+Trade Comissions,Fees & Charges,TRUE,Other
 Transfer,Transfer,FALSE
 Transfer for Cash Spending,Transfer,FALSE
-Transportation,Auto & Transport,TRUE
-Travel,Travel,TRUE
-Tuition,Education,TRUE
-Uncategorized,MISC,TRUE
-Utilities,Bills & Utilities,TRUE
-Vacation,Travel,TRUE
+Transportation,Auto & Transport,TRUE,Auto & Transport
+Travel,Travel,TRUE,Travel
+Tuition,Education,TRUE,Education
+Uncategorized,MISC,TRUE,Other
+Utilities,Bills & Utilities,TRUE,Bills & Utilities
+Vacation,Travel,TRUE,Travel
 Wedding,Wedding,FALSE
-Withdrawal,Investments,TRUE
-Travel Insurance,Travel,TRUE
+Withdrawal,Investments,TRUE,Other
+Travel Insurance,Travel,TRUE,Travel

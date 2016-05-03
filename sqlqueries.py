@@ -446,7 +446,7 @@ def sqlStockTable():
        FROM stockprices
          INNER JOIN fxrates FX1 ON (FX1.FXDate) = (stockprices.transdate)
          INNER JOIN bankaccounts ON stockprices.accountname = bankaccounts.MintAccountName
-       WHERE symbol != 'MoneyMarket' AND date(stockprices.transdate) = CAST(CONVERT_TZ(current_date(), 'UTC', 'US/Pacific') AS DATE) - 1
+       WHERE symbol != 'MoneyMarket' AND date(stockprices.transdate) = CAST(CONVERT_TZ(current_date(), 'UTC', 'US/Pacific') AS DATE)
        GROUP BY bankaccounts.Owner, stockprices.symbol) AS T2
         ON T1.symbol = T2.symbol AND T1.owner = T2.owner
       INNER JOIN fxrates FX2 on T2.transdate = FX2.FXDate
@@ -464,7 +464,7 @@ def sqlSumStockTable2():
       T1.TotalGain AS 'Total Gain/Loss'
     FROM
       (SELECT
-         current_date as transdate,
+         CAST(CONVERT_TZ(current_date(), 'UTC', 'US/Pacific') AS DATE) as transdate,
          bankaccounts.Owner AS owner,
          round(sum(CASE WHEN bankaccounts.Currency = "USD"
            THEN transactions.amount
@@ -473,7 +473,7 @@ def sqlSumStockTable2():
        FROM transactions
          INNER JOIN bankaccounts ON transactions.accountname = bankaccounts.MintAccountName
          INNER JOIN fxrates FX1 ON FX1.FXDate = transactions.transdate
-       WHERE transactions.category = 'gain/loss' AND date(transactions.transdate) <= current_date
+       WHERE transactions.category = 'gain/loss' AND date(transactions.transdate) <= CAST(CONVERT_TZ(current_date(), 'UTC', 'US/Pacific') AS DATE)
        GROUP BY bankaccounts.Owner) AS T1
       INNER JOIN
       (SELECT
@@ -485,7 +485,7 @@ def sqlSumStockTable2():
        FROM stockprices
          INNER JOIN fxrates ON (fxrates.FXDate) = (stockprices.transdate)
          INNER JOIN bankaccounts ON stockprices.accountname = bankaccounts.MintAccountName
-       WHERE symbol != 'MoneyMarket' AND stockprices.transdate = current_date - 3
+       WHERE symbol != 'MoneyMarket' AND stockprices.transdate = CAST(CONVERT_TZ(current_date(), 'UTC', 'US/Pacific') AS DATE)
        GROUP BY bankaccounts.Owner) AS T2
         ON T1.owner = T2.owner
         INNER JOIN fxrates FX2 on t1.transdate = FX2.FXDate
@@ -494,44 +494,46 @@ def sqlSumStockTable2():
 def sqlSumStockTable():
     return '''
     SELECT
-          S1.transdate,
-          S1.owner,
-          FX2.Rate,
-          S1.DaysGain  AS 'Day''s Gain',
-          S1.TotalGain AS 'Total Gain/Loss'
-        FROM (
-    SELECT
-          T1.transdate,
-          T2.owner,
-          T2.DaysGain,
-          T1.TotalGain
-        FROM
-          (SELECT
-             CAST(CONVERT_TZ(current_date(), 'UTC', 'US/Pacific') AS DATE) as transdate,
-             bankaccounts.Owner AS owner,
-             round(sum(CASE WHEN bankaccounts.Currency = "USD"
-               THEN transactions.amount
-                       ELSE transactions.amount / FX1.Rate
-                       END), 2) AS TotalGain
-           FROM money.transactions
-             INNER JOIN money.bankaccounts ON transactions.accountname = bankaccounts.MintAccountName
-             INNER JOIN money.fxrates FX1 ON FX1.FXDate = transactions.transdate
-           WHERE transactions.category = 'gain/loss' AND date(transactions.transdate) <= current_date
-           GROUP BY bankaccounts.Owner) AS T1
-          INNER JOIN
-          (SELECT
-             bankaccounts.Owner   AS owner,
-             sum(round((CASE WHEN bankaccounts.Currency = "USD"
-               THEN (stockprices.price - stockprices.prevprice) * stockprices.numshares
-                        ELSE (stockprices.price - stockprices.prevprice) * stockprices.numshares / fxrates.Rate
-                        END), 2)) AS DaysGain
-           FROM money.stockprices
-             INNER JOIN money.fxrates ON (fxrates.FXDate) = (stockprices.transdate)
-             INNER JOIN money.bankaccounts ON stockprices.accountname = bankaccounts.MintAccountName
-           WHERE symbol != 'MoneyMarket' AND stockprices.transdate = current_date - 3
-           GROUP BY bankaccounts.Owner) AS T2
-            ON T1.owner = T2.owner) AS S1
-            INNER JOIN money.fxrates FX2 ON S1.transdate = FX2.FXDate;
+      S1.transdate,
+      S1.owner,
+      FX2.Rate,
+      S1.DaysGain  AS 'Day''s Gain',
+      S1.TotalGain AS 'Total Gain/Loss'
+    FROM (
+           SELECT
+             T1.transdate,
+             T2.owner,
+             T2.DaysGain,
+             T1.TotalGain
+           FROM
+             (SELECT
+                CAST(CONVERT_TZ(current_date(), 'UTC', 'US/Pacific') AS DATE) AS transdate,
+                bankaccounts.Owner                                            AS owner,
+                round(sum(CASE WHEN bankaccounts.Currency = "USD"
+                  THEN transactions.amount
+                          ELSE transactions.amount / FX1.Rate
+                          END), 2)                                            AS TotalGain
+              FROM money.transactions
+                INNER JOIN money.bankaccounts ON transactions.accountname = bankaccounts.MintAccountName
+                INNER JOIN money.fxrates FX1 ON FX1.FXDate = transactions.transdate
+              WHERE transactions.category = 'gain/loss' AND
+                    date(transactions.transdate) <= CAST(CONVERT_TZ(current_date(), 'UTC', 'US/Pacific') AS DATE)
+              GROUP BY bankaccounts.Owner) AS T1
+             INNER JOIN
+             (SELECT
+                bankaccounts.Owner   AS owner,
+                sum(round((CASE WHEN bankaccounts.Currency = "USD"
+                  THEN (stockprices.price - stockprices.prevprice) * stockprices.numshares
+                           ELSE (stockprices.price - stockprices.prevprice) * stockprices.numshares / fxrates.Rate
+                           END), 2)) AS DaysGain
+              FROM money.stockprices
+                INNER JOIN money.fxrates ON (fxrates.FXDate) = (stockprices.transdate)
+                INNER JOIN money.bankaccounts ON stockprices.accountname = bankaccounts.MintAccountName
+              WHERE symbol != 'MoneyMarket' AND
+                    stockprices.transdate = CAST(CONVERT_TZ(current_date(), 'UTC', 'US/Pacific') AS DATE)
+              GROUP BY bankaccounts.Owner) AS T2
+               ON T1.owner = T2.owner) AS S1
+      INNER JOIN money.fxrates FX2 ON S1.transdate = FX2.FXDate;
         '''
 
 

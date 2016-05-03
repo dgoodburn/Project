@@ -92,6 +92,7 @@ function initializeBalanceChart(balanceData, currentBalanceData, chartOrder) {
         this.dataView = this.currencyChange(this.dataView);
         this.dataView = this.formatDateAndAmount(this.dataView);
 
+
         var todayBalance = this.dataView.getValue(1, 1);
         var oldBalance = this.dataView.getValue(0, 1);
 
@@ -716,7 +717,6 @@ function initializeMonthlySpend(spendingdata, chartOrder) {
     GLOBALS.grid.append(monthlySpend.htmldiv);
     monthlySpend.dataTable = monthlySpend.initialDraw(monthlySpend.data);
     monthlySpend.redraw();
-
 }
 
 

@@ -48,7 +48,7 @@ var chart = function (div, data, divcol, firstTitle, secondTitle, sumcol, valSta
             focusTarget: 'category',
             bar: {groupWidth: "75%"},
             chartArea: {left: 40, top: 10, width: '95%', height: '90%'},
-            animation: {startup: true, easing: 'inAndOut', duration: 750},
+            animation: {startup: false, easing: 'inAndOut', duration: 750},
             hAxis: {baselineColor: GLOBALS.greyfont, textStyle: {color: GLOBALS.greyfont}},
             vAxis: {textStyle: {color: GLOBALS.greyfont}, format: 'short', viewWindowMode: 'maximized'},
             titleTextStyle: {color: GLOBALS.greyfont, bold: 'false', fontSize: 16},
