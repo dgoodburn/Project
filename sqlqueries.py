@@ -631,7 +631,7 @@ def sqlSumSpendTable():
       INNER JOIN fxrates AS FX1 ON transactions.transdate = FX1.FXDate
       INNER JOIN categories ON categories.Category = transactions.category
     WHERE transactions.transdate <= CAST(CONVERT_TZ(current_date(), 'UTC', 'US/Pacific') AS DATE) AND
-          LAST_DAY(transactions.transdate) >= date(DATE_SUB(NOW(), INTERVAL 18 MONTH)) AND categories.Spending
+          LAST_DAY(transactions.transdate) >= date(DATE_SUB(NOW(), INTERVAL 12 MONTH)) AND categories.Spending
     GROUP BY LAST_DAY(transactions.transdate);
     '''
     # AND bankaccounts.JointColumn = "Joint"

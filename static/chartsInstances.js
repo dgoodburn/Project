@@ -258,7 +258,7 @@ function initializeSpendingChart(spendingdata, chartOrder) {
     spendingChart.appendChartDiv(chartOrder);
 
     spendingChart.redraw = function () {
-
+        
         this.dataOwnerJoin = this.dataJoin(this.dataTable, "Combined");
         this.dataView = this.dataOwnerGroup(this.dataOwnerJoin);
 
@@ -268,6 +268,7 @@ function initializeSpendingChart(spendingdata, chartOrder) {
 
         this.chartWrapper.setDataTable(this.dataView);
         GLOBALS.formatdate.format(this.dataView, 0);
+
         this.chartWrapper.draw();
         initialChange();
 
@@ -285,6 +286,7 @@ function initializeSpendingChart(spendingdata, chartOrder) {
     spendingChart.tooltip ? spendingChart.tooltipListener() : void(0);
 
     spendingChart.dataTable = spendingChart.initialDraw(spendingChart.data);
+
     spendingChart.redraw();
 
 
